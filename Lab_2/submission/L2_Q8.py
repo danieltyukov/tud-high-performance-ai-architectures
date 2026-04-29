@@ -1,17 +1,7 @@
-"""Lab 2 — Exercise 2.8.
-
-Multithreaded port of tvb_par.py: the only change against the provided
-process-pool version is `ProcessPoolExecutor` -> `ThreadPoolExecutor`.
-
-Lab Q2.9 also asks about the GIL; the script supports a `--time` flag
-that prints wall-clock so the report can compare 15 ms vs 60 ms scaling
-against the multiprocess baseline.
-
-Usage:
-    python3 L2_Q8.py --dataset tvb76  --tf 15
-    python3 L2_Q8.py --dataset tvb192 --tf 60
-"""
-from __future__ import annotations
+# L2_Q8.py
+# tvb_par.py with ThreadPoolExecutor instead of ProcessPoolExecutor.
+# Same kernels, same chunksize, same Python lists for Xs/W/D so the
+# numbers are directly comparable to the multiprocess baseline.
 
 import argparse
 import os
@@ -33,8 +23,6 @@ def post(gx):
 
 
 def f(x, y):
-    """MLP local dynamics — kept in pure Python on purpose so the GIL
-    contention behaviour matches the provided multiprocessed reference."""
     sv = [x, y]
     hidden = [0] * MLP_L
     out = [0] * MLP_M
@@ -78,8 +66,7 @@ def center_task(Xs, W_row, D_row, t, n, dt):
     return step(Xs, t, n, c_in, dt)
 
 
-def simulate(W, D, N, M, dt, tf, speed, chunk: int):
-    """tvb_par.simulate but with a thread pool instead of a process pool."""
+def simulate(W, D, N, M, dt, tf, speed, chunk):
     total = int(tf / dt)
     Xs = [[[0.0 for _ in range(total)] for _ in range(M)] for _ in range(N)]
     D_ts = [[int((D[i][j] / speed) / dt) for i in range(N)] for j in range(N)]
@@ -99,32 +86,24 @@ def simulate(W, D, N, M, dt, tf, speed, chunk: int):
                 for m in range(M):
                     Xs[n][m][t] = res[n][m]
     elapsed = time.time() - start
-    print(f"{elapsed}")
+    print(elapsed)
     return [t * dt for t in range(total)], Xs, elapsed
 
 
-def main():
+if __name__ == "__main__":
     p = argparse.ArgumentParser()
-    p.add_argument("--dataset", default="tvb76",
-                   choices=["tvb76", "tvb192"])
+    p.add_argument("--dataset", default="tvb76", choices=["tvb76", "tvb192"])
     p.add_argument("--tf", type=float, default=15.0)
     p.add_argument("--dt", type=float, default=0.05)
     p.add_argument("--speed", type=float, default=4.0)
     p.add_argument("--chunk", type=int, default=40)
     args = p.parse_args()
 
-    loader = {
-        "tvb76": data.tvb76_weights_lengths,
-        "tvb192": data.tvb192_weights_lengths,
-    }[args.dataset]
+    loader = {"tvb76":  data.tvb76_weights_lengths,
+              "tvb192": data.tvb192_weights_lengths}[args.dataset]
     W, D = loader()
     W_l = W.tolist()
     D_l = D.tolist()
     N = len(W_l)
-    M = 2
 
-    simulate(W_l, D_l, N, M, args.dt, args.tf, args.speed, args.chunk)
-
-
-if __name__ == "__main__":
-    main()
+    simulate(W_l, D_l, N, 2, args.dt, args.tf, args.speed, args.chunk)
