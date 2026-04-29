@@ -1,0 +1,104 @@
+\documentclass[11pt,a4paper]{article}
+
+% Geometry
+\usepackage[margin=1in]{geometry}
+
+% Fonts (modern + Word-like)
+\usepackage{fontspec}
+\setmainfont{Times New Roman}
+\setsansfont{Arial}
+
+% Colors
+\usepackage{xcolor}
+\definecolor{headingcolor}{HTML}{1F4E79} % Word-like blue
+\definecolor{lightgray}{HTML}{666666}
+
+% Spacing
+\usepackage{setspace}
+\onehalfspacing
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.6em}
+
+% Section styling
+\usepackage{titlesec}
+
+\titleformat{\section}
+{\color{headingcolor}\sffamily\Large\bfseries}
+{\thesection}{1em}{}
+
+\titleformat{\subsection}
+{\sffamily\large\bfseries}
+{\thesubsection}{1em}{}
+
+% Custom commands
+\newcommand{\courseheader}{
+    \begin{center}
+        {\sffamily\Large\bfseries CESE5040}\\[0.3em]
+        {\sffamily High-Performance and AI Architectures}\\
+        {\color{lightgray}2026 Q4}
+    \end{center}
+}
+
+\newcommand{\infobox}[1]{
+    \vspace{0.5em}
+    {\sffamily\bfseries #1}
+    \vspace{0.3em}
+}
+
+\begin{document}
+
+% Header
+\courseheader
+
+\vspace{1.5em}
+
+% Student Info
+{\color{headingcolor}\sffamily\large\bfseries Student Information}
+
+% \vspace{0.5em}
+
+\textbf{Name:} John Doe\\
+\textbf{Student Number:} 123456
+
+% \vspace{1.5em}
+
+% Notes
+{\color{headingcolor}\sffamily\large\bfseries Notes}
+
+% \vspace{0.5em}
+
+\begin{itemize}
+    \item Provide your answers following the template DOCX file.
+    \item Include your name and student number in the report.
+    \item Include your student number in the file name.
+    \item Submit at least 3 days before the next lecture.
+    \item Use the same machine for all measurements.
+\end{itemize}
+
+\vspace{1.5em}
+
+% Lab
+\section*{\color{headingcolor}Lab Exercise 1}
+
+\subsection*{Question 1}
+Give answer here...
+
+\vspace{1em}
+
+\subsection*{Question 2}
+Give answer here...
+
+\vspace{2em}
+
+% LLM Disclosure
+{\color{headingcolor}\sffamily\large\bfseries LLM Usage Disclosure}
+
+\vspace{0.5em}
+
+Disclose your usage of LLM for this assignment. Refer to the lecture slides and reporting guidelines.
+
+\vspace{0.5em}
+
+\textit{Example: I used ChatGPT to help with NumPy documentation and refine the language of my report.}
+
+\end{document}
