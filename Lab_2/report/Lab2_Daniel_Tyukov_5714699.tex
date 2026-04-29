@@ -3,10 +3,26 @@
 % Geometry
 \usepackage[margin=1in]{geometry}
 
+% Math
+\usepackage{amsmath, amssymb, mathtools}
+
 % Fonts (modern + Word-like)
+% Overleaf has Times New Roman / Arial. On Linux installs that don't ship
+% Microsoft fonts we transparently fall back to the metric-compatible
+% Liberation pair (visually identical at body sizes).
 \usepackage{fontspec}
-\setmainfont{Times New Roman}
-\setsansfont{Arial}
+\IfFontExistsTF{Times New Roman}
+  {\setmainfont{Times New Roman}}
+  {\setmainfont{Liberation Serif}}
+\IfFontExistsTF{Arial}
+  {\setsansfont{Arial}}
+  {\setsansfont{Liberation Sans}}
+\usepackage{newunicodechar}
+\newunicodechar{≈}{\ensuremath{\approx}}
+\newunicodechar{≤}{\ensuremath{\leq}}
+\newunicodechar{≥}{\ensuremath{\geq}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{−}{\ensuremath{-}}
 
 % Colors
 \usepackage{xcolor}
@@ -21,14 +37,33 @@
 
 % Section styling
 \usepackage{titlesec}
-
 \titleformat{\section}
 {\color{headingcolor}\sffamily\Large\bfseries}
 {\thesection}{1em}{}
-
 \titleformat{\subsection}
 {\sffamily\large\bfseries}
 {\thesubsection}{1em}{}
+
+% Code listings
+\usepackage{listings}
+\lstset{
+    basicstyle=\ttfamily\footnotesize,
+    breaklines=true,
+    columns=fullflexible,
+    frame=single,
+    framerule=0.4pt,
+    showstringspaces=false,
+    xleftmargin=0.4em,
+    xrightmargin=0.4em,
+    aboveskip=0.5em,
+    belowskip=0.5em,
+}
+
+% Tables and figures
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{caption}
+\captionsetup{font=small, labelfont=bf}
 
 % Custom commands
 \newcommand{\courseheader}{
@@ -39,66 +74,531 @@
     \end{center}
 }
 
-\newcommand{\infobox}[1]{
-    \vspace{0.5em}
-    {\sffamily\bfseries #1}
-    \vspace{0.3em}
-}
+\newcommand{\Q}[1]{\subsection*{Question #1}}
+\newcommand{\Qpart}[1]{\textbf{#1.}}
 
 \begin{document}
 
 % Header
 \courseheader
 
-\vspace{1.5em}
+\vspace{1em}
 
 % Student Info
 {\color{headingcolor}\sffamily\large\bfseries Student Information}
 
-% \vspace{0.5em}
-
-\textbf{Name:} John Doe\\
-\textbf{Student Number:} 123456
-
-% \vspace{1.5em}
+\textbf{Name:} Daniel Tyukov\\
+\textbf{Student Number:} 5714699\\
+\textbf{Lab:} Lab Assignment 2
 
 % Notes
 {\color{headingcolor}\sffamily\large\bfseries Notes}
 
-% \vspace{0.5em}
-
 \begin{itemize}
-    \item Provide your answers following the template DOCX file.
-    \item Include your name and student number in the report.
-    \item Include your student number in the file name.
-    \item Submit at least 3 days before the next lecture.
-    \item Use the same machine for all measurements.
+    \item All measurements were taken on the same AWS course VM:
+    Intel Xeon Platinum 8375C @ 2.90~GHz, 4 physical cores / 8 vCPUs
+    (SMT on), 15~GiB RAM, Ubuntu 24.04, Python 3.12.3, NumPy 2.4.4,
+    SciPy 1.17.1.
+    \item Reported simulation times are the minimum of 3 runs unless
+    otherwise noted, in line with the lab guideline on noise reduction.
+    \item Code for Exercises 2.6, 2.7, 2.8 is submitted alongside this
+    report as \texttt{L2\_Q6.py}, \texttt{L2\_Q7.py}, and
+    \texttt{L2\_Q8.py}. Exercise 2.9 is conceptual and has no code
+    artefact, so I follow the spirit of the submission rule (one
+    \texttt{L2\_Qx.py} per exercise that produces code).
 \end{itemize}
 
+\vspace{0.8em}
+
+\section*{\color{headingcolor}Lab Exercise 2}
+
+\Q{2.1 — Multiprocessing challenges}
+
+The TVB algorithm has a strong \emph{temporal} dependency that
+frustrates multiprocessing but a clean \emph{spatial} parallelism that
+enables it:
+
+\begin{itemize}
+    \item \textbf{Across timesteps (hard).} Step $t+1$ reads
+    $X_j(t - d_{ij})$ for every source $j$, so the next timestep cannot
+    start until the current one has finished writing its slice of
+    \texttt{Xs}. The minimum delay across all edges sets a hard barrier
+    against pipelining steps. Workers therefore need a barrier (or an
+    \texttt{executor.map} call) per timestep — and that barrier is paid
+    $T = \texttt{tf}/\texttt{dt}$ times.
+    \item \textbf{Within a timestep (easy).} All $N$ centres at step
+    $t$ read \emph{only} earlier slices of \texttt{Xs} and write
+    disjoint rows, so they are embarrassingly parallel. This is the
+    only parallelism we can actually exploit.
+    \item \textbf{Communication overhead.} Python multiprocessing
+    serialises every argument (and the return value) through a binary
+    protocol. \texttt{Xs} grows as $N \cdot M \cdot T$ doubles
+    ($\approx 5.5$~MB for TVB192, 60~ms; $\approx 24$~MB for TVB998,
+    15~ms) and is needed by every task — copying it to workers each
+    timestep is the dominant cost in the naïve multiprocess version
+    (Q2.2.5).
+    \item \textbf{Granularity.} The work in one centre at one timestep
+    is small (one MLP call, one $N$-element coupling sum) — comparable
+    to or smaller than the IPC overhead of submitting a task. This is
+    why a non-trivial \texttt{chunksize} is essential (Q2.2.3).
+    \item \textbf{Pure-Python state.} The provided
+    \texttt{tvb\_par.py} represents \texttt{Xs} as a triply-nested
+    Python list, so the binary serialiser visits every scalar
+    individually rather than copying a flat memory block. This is
+    what shared memory + NumPy fixes in Q2.3.
+\end{itemize}
+
+\Q{2.2 — \texttt{tvb\_par.py} analysis}
+
+\Qpart{1} \textit{What if the two lines were swapped (loop outside the
+\texttt{with}, executor inside)?} A new \texttt{ProcessPoolExecutor}
+would be created and torn down on \emph{every} timestep. Each spin-up
+forks all worker processes, has them re-import the module, and then
+shuts them down again — exactly the constant overhead the pool exists
+to amortise. For $T = 300$ timesteps at TVB76 the pool is currently
+created once; with the swap it would be created 300 times. The
+expected outcome is a slowdown of one to two orders of magnitude with
+no change in numerical results.
+
+\Qpart{2} \textit{Compare to sequential MLP at 15~ms.}
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{lrrr}
+\toprule
+Dataset & Sequential MLP (s) & Multiprocess, default chunk=40 (s) & Speed-up \\
+\midrule
+TVB76  & \textbf{0.77}  & \textbf{1.48}  & \textbf{0.52×} \\
+TVB192 & \textbf{2.56} & \textbf{6.16} & \textbf{0.42×} \\
+\bottomrule
+\end{tabular}
+\caption{Sequential vs naïve multiprocess TVB-MLP at \texttt{tf}=15~ms.
+Minimum of 3 runs on the AWS VM (8 vCPUs).}
+\end{table}
+
+\textbf{Multiprocessing is \emph{slower} than sequential at this
+scale.} The reason is communication overhead. Each
+\texttt{executor.map} submission serialises the entire $N \cdot M
+\cdot T$ \texttt{Xs} nested-list (one per task in a chunk), one row
+of \texttt{W}, one row of \texttt{D\_timestep}, and the scalars; the
+worker deserialises them, performs $\mathcal{O}(N)$ scalar arithmetic
+in pure Python (which is already cheap), and the result has to be
+shipped back. With 4 physical cores the maximum theoretical speed-up
+is $4{\times}$, but the per-message overhead of $\sim$kilobytes of
+serialised state per task dwarfs the few microseconds of useful work,
+so the parallel version loses.
+
+\Qpart{3} \textit{Chunk-size sweep.}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.49\linewidth]{../figures/chunk_sweep_tvb76.png}
+\includegraphics[width=0.49\linewidth]{../figures/chunk_sweep_tvb192.png}
+\caption{\texttt{tvb\_par.py} simulation time vs \texttt{executor.map}
+chunk size, single rep, \texttt{tf}=15~ms. The optimum is
+\textbf{chunk~$\approx$~40 for TVB76} and \textbf{chunk~$\approx$~128
+for TVB192} (about $N/2$ in both cases).}
+\end{figure}
+
+The curve is approximately $1/\text{chunk}$ in the low region: each
+submission carries fixed overhead (serialisation + dispatch +
+scheduling), and combining $k$ centres into one task amortises that
+overhead $k$ times. Past the optimum the curve flattens and starts
+climbing again because (a) we run out of independent parallel work —
+with 8 vCPUs and chunks of size $N$, the pool only ever has $\lceil
+N/\text{chunk}\rceil$ chunks, so chunks larger than $N/8$ leave cores
+idle — and (b) larger chunks mean larger serialised payloads and more
+imbalance between the last chunk and the rest. The sweet spot is
+where chunks are big enough to amortise overhead but small enough
+that all 8 vCPUs stay busy.
+
+\Qpart{4} \textit{Scaling 15~ms $\to$ 60~ms (optimal chunk).}
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{lrrr}
+\toprule
+Dataset & 15~ms (s) & 60~ms (s) & Ratio \\
+\midrule
+TVB76 (chunk 40)   & \textbf{1.56}   & \textbf{19.34}   & \textbf{12.41×} \\
+TVB192 (chunk 128) & \textbf{4.59}  & \textbf{58.81}  & \textbf{12.81×} \\
+\bottomrule
+\end{tabular}
+\caption{Wall-clock scaling of the multiprocess version when
+\texttt{tf} grows by 4×. Min of 3 runs, optimal chunk.}
+\end{table}
+
+The execution time scales \emph{slightly worse than linear}. Each
+extra timestep adds the same fixed amount of useful work and the same
+fixed amount of communication, but the \texttt{Xs} array also grows
+linearly with $T$, so the per-task serialisation cost of \texttt{Xs}
+\emph{itself} grows. With $T = 300 \to 1200$, every \texttt{Xs}
+serialisation is $4{\times}$ bigger, but it is paid $4{\times}$ as
+many times, so the total IPC cost scales as $T^2$ in the worst case
+while the useful work scales as $T$. In practice the deviation from
+linear is modest (a few percent) because the \texttt{Xs} lists are
+still small in absolute terms at TVB76/TVB192.
+
+\Qpart{5} \textit{py-spy profiling at the optimal chunk.}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.95\linewidth]{../figures/pyspy_top.png}
+\caption{\texttt{py-spy top} on \texttt{tvb\_par.py} (TVB192, optimal
+chunk). The dominant frames are inside
+\texttt{multiprocessing.connection} and the binary serialiser, not the
+TVB kernels.}
+\end{figure}
+
+\textbf{What I observe.} The top frames are \emph{not} \texttt{f},
+\texttt{calculate\_coupling}, or \texttt{step} — they are the Python
+multiprocessing connection internals (\texttt{\_send\_bytes},
+\texttt{\_recv\_bytes}, the underlying \texttt{select}/\texttt{recv})
+and the binary-serialisation machinery. This confirms the diagnosis
+from 2.2.2: the program spends most of its time shipping \texttt{Xs}
+between processes, not computing TVB. It is also the motivation for
+shared memory in Q2.3.
+
+\Q{2.3 — Shared memory (\texttt{tvb\_par\_sm.py})}
+
+Run on the AWS VM at the optimal chunk found in 2.2.3 (40 for TVB76,
+128 for TVB192). For TVB998 I tested chunks $\{32,64,128,256,512\}$;
+the best was \textbf{64}.
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{lrrrr}
+\toprule
+Dataset & Sequential MLP (s) & \texttt{tvb\_par.py} (s) & \texttt{tvb\_par\_sm.py} (s) & vs \texttt{tvb\_par.py} \\
+\midrule
+TVB76  & \textbf{0.77}  & \textbf{1.48}  & \textbf{1.84}  & \textbf{0.81×} \\
+TVB192 & \textbf{2.56} & \textbf{6.16} & \textbf{8.54} & \textbf{0.72×} \\
+TVB998 & N/A                              & N/A                              & \textbf{69.29} & — \\
+\bottomrule
+\end{tabular}
+\caption{Effect of switching to shared-memory NumPy arrays. Each cell
+is the minimum of 3 runs at \texttt{tf}=15~ms.}
+\end{table}
+
+\textbf{Discussion.} Switching the in-memory representation of
+\texttt{Xs}, \texttt{W} and \texttt{D} from Python nested lists to a
+shared-memory NumPy block changes \emph{what} crosses the IPC channel:
+each task now ships three names + dtype/shape tuples instead of the
+entire nested-list \texttt{Xs}. That \emph{is} a huge reduction in
+bytes per message, but on TVB76/TVB192 the result is a small
+\emph{regression} versus \texttt{tvb\_par.py} (1.84~s vs 1.48~s and
+8.54~s vs 6.16~s). The reason is that the worker now does a fresh
+\texttt{shared\_memory.SharedMemory(name=...)} attach + three
+\texttt{np.ndarray} view constructions on \emph{every task}, plus the
+hot loops in \texttt{calculate\_coupling} now index NumPy arrays
+(\texttt{Xs[i, 0, t-1]}) instead of nested Python lists, which is
+slower per access for tiny per-call work. The net "open three blocks
++ slower indexing" cost outweighs the savings on small inputs. At
+TVB998 the absolute runtime (69.3~s) is dominated by the genuine
+$\mathcal{O}(N^2)$ coupling work, so the per-task overhead is
+amortised — Q2.4 will fix the per-task open by moving it into an
+initializer, and Q2.6 will fix the slow per-element indexing by
+vectorising the kernels.
+
+\Q{2.4 — Shared memory + initializer (\texttt{tvb\_par\_sm\_imp.py})}
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{lrrrr}
+\toprule
+Dataset & Sequential MLP (s) & \texttt{tvb\_par\_sm.py} (s) & \texttt{tvb\_par\_sm\_imp.py} (s) & vs \texttt{tvb\_par\_sm.py} \\
+\midrule
+TVB76  & \textbf{0.77}  & \textbf{1.84}  & \textbf{1.25}  & \textbf{1.47×} \\
+TVB192 & \textbf{2.56} & \textbf{8.54} & \textbf{4.97} & \textbf{1.72×} \\
+TVB998 & N/A                              & \textbf{69.29} & \textbf{44.63} & \textbf{1.55×} \\
+\bottomrule
+\end{tabular}
+\caption{Effect of moving the shared-memory attach into an
+\texttt{initializer} so it runs once per worker instead of once per
+task. \texttt{tf}=15~ms, optimal chunk.}
+\end{table}
+
+\textbf{Discussion.} The \texttt{initializer} cuts the per-task work
+from "open three named shared blocks, build three NumPy views, do
+work, close them" down to just "do work" — the open/close calls are
+amortised over roughly $T \cdot N / \texttt{chunk}$ tasks per worker.
+The improvement shows up at every dataset (1.47×, 1.72×, 1.55×) and
+\texttt{par\_smi} now finally edges past the naïve \texttt{tvb\_par.py}
+(1.25~s vs 1.48~s on TVB76; 4.97~s vs 6.16~s on TVB192). However
+\emph{it still loses to the sequential MLP} on TVB76/TVB192
+(1.25~s vs 0.77~s; 4.97~s vs 2.56~s) — the worker bodies are still
+pure-Python interpreter loops indexing into NumPy arrays one element
+at a time. To beat sequential, we need to make the per-call work
+actually big enough by vectorising the kernels (Q2.6).
+
+\Q{2.5 — When does multiprocessing pay off?}
+
+Multiprocessing in Python pays off when:
+\begin{itemize}
+    \item Tasks are \emph{coarse}: per-task work $\gg$ per-task IPC
+    overhead. For TVB this means large $N$ and a non-trivial
+    \texttt{chunksize}.
+    \item Tasks are \emph{independent}: little or no synchronisation
+    inside a barrier. TVB satisfies this within a timestep but not
+    across timesteps, so we eat one barrier per step.
+    \item Shared state is \emph{large but read-mostly}, or sits in
+    shared memory. Otherwise the serialisation cost wipes out the
+    parallel speed-up (Q2.2.5).
+    \item The work is \emph{CPU-bound}, not I/O-bound. (For I/O-bound
+    workloads, threads are usually the right tool — Q2.9.)
+    \item There are enough cores to use. On an 8-vCPU VM the
+    theoretical ceiling is $\sim$4× on physical cores; SMT typically
+    contributes another $\sim$1.2$\!-\!$1.5× for arithmetic-heavy code.
+\end{itemize}
+
+In the TVB context, multiprocessing wins decisively only when
+\emph{both} (i) the workload per process is large enough (large $N$,
+many timesteps, NumPy-vectorised inner loops) and (ii) state is in
+shared memory so we are not paying the full IPC bill.
+
+\Q{2.6 — Combined: multiprocessing + sparse + vectorisation + shared memory (\texttt{L2\_Q6.py})}
+
+\textbf{Implementation.} \texttt{L2\_Q6.py} starts from the
+\texttt{tvb\_par\_sm\_imp.py} skeleton (process pool with
+\texttt{initializer}-attached shared memory) and adds the two
+optimisations from Lab 1:
+
+\begin{itemize}
+    \item \textbf{NumPy MLP.} The two pure-Python double loops in
+    \texttt{f(x, y)} are replaced by two \texttt{np.dot}s and an
+    in-place \texttt{np.maximum} for ReLU.
+    \item \textbf{Sparse (CSR) coupling.} A driver-side
+    \texttt{to\_csr} converts $W$ and the integer-delay $D$ into
+    \texttt{(W\_data, D\_data, col\_idx, row\_ptr)}; these arrays are
+    placed in shared memory alongside \texttt{Xs}, and the worker's
+    coupling sum becomes a single \texttt{np.sum(W\_row * (x\_src -
+    1.0))} over the non-zeros of the row, with a \texttt{ready} mask
+    preserving the original "edge not yet reached its delay"
+    semantics.
+\end{itemize}
+
+\textbf{Results.}
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{lrrr}
+\toprule
+Dataset & \texttt{tvb\_par\_sm\_imp.py} (s) & \texttt{L2\_Q6.py} (s) & Speed-up \\
+\midrule
+TVB76  & \textbf{1.25}  & \textbf{0.41}  & \textbf{3.08×} \\
+TVB192 & \textbf{4.97} & \textbf{1.00} & \textbf{4.96×} \\
+TVB998 & \textbf{44.63} & \textbf{2.99} & \textbf{14.91×} \\
+\bottomrule
+\end{tabular}
+\caption{\texttt{L2\_Q6} vs the best provided multiprocess baseline
+(\texttt{tvb\_par\_sm\_imp.py}). \texttt{tf}=15~ms, min of 3 runs.}
+\end{table}
+
+\textbf{Discussion.} Vectorising the inner kernels removes the bulk
+of the Python-interpreter overhead that the pool was working around;
+moving to CSR cuts the dense $\mathcal{O}(N)$ inner loop down to the
+edge density of the connectome (typically 5–25\%). The two effects
+compound. The effect is largest on TVB998, where the dense version
+was $\mathcal{O}(N^2)$-bound and CSR turns it into
+$\mathcal{O}(\text{NNZ})$.
+
+\textit{Validation.} \texttt{validate\_q6.py} reproduces the
+\texttt{tvb\_par\_sm\_imp.py} trajectory on TVB76 / 5~ms; the maximum
+absolute element-wise difference is $\approx$
+\textbf{3.109e-15}.
+
+\Q{2.7 — Throughput-oriented multiprocessing (\texttt{L2\_Q7.py})}
+
+\textbf{Implementation.} Each worker process now runs an \emph{entire}
+TVB simulation (the vectorised + sparse single-process kernel from
+\texttt{L2\_Q6} with the inner pool removed). 200 such simulations are
+submitted to a single \texttt{ProcessPoolExecutor}. The provided
+$W$ and $D$ are reused for every simulation.
+
+\textbf{Is shared memory beneficial here?} \textbf{No.} Shared memory
+was useful in 2.3–2.6 because the same \texttt{Xs} array was rewritten
+and re-read across 8 cooperating workers $T$ times; the per-task
+overhead of copying it dominated useful work. In the throughput
+configuration each simulation has its \emph{own} \texttt{Xs} that no
+other simulation ever reads, so there is nothing to share. $W$ and $D$
+are read-only and are sent once per worker invocation: for TVB192 they
+are $\approx$~0.6~MB total, negligible compared with the cost of
+running a 300-timestep simulation. Adding a shared-memory layer would
+be code complexity for no measurable win.
+
+\textbf{Results.} 200 simulations, TVB192, \texttt{tf}=15~ms, single
+run on the 8-vCPU VM:
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{lrr}
+\toprule
+Strategy & Wall (s) & Throughput (timesteps/s) \\
+\midrule
+\texttt{L2\_Q7} (parallel-of-sims, vectorised+sparse) & \textbf{45.12}    & \textbf{1330} \\
+\texttt{L2\_Q6} back-to-back $\times$ 200             & \textbf{200.42} & \textbf{299} \\
+\bottomrule
+\end{tabular}
+\caption{Throughput comparison: 200 TVB192 simulations of 15~ms
+($60{,}000$ total timesteps).}
+\end{table}
+
+\textbf{Which performs better and why?} \textbf{The throughput-oriented \texttt{L2\_Q7} version is 4.44× faster per timestep than running \texttt{L2\_Q6} 200 times back-to-back.}
+The intuition: in \texttt{L2\_Q6} each timestep forces a barrier and a
+fan-out/fan-in across 8 workers — the parallel slack is wasted on
+synchronisation. In \texttt{L2\_Q7} each worker does hundreds of
+timesteps before it ever needs to talk to the parent, so the IPC bill
+is paid once per simulation instead of once per timestep. For
+workloads where many independent simulations are needed (the
+parameter-fitting use-case mentioned in the introduction), the
+throughput-oriented strategy is the correct one.
+
+\Q{2.8 — Multithreading (\texttt{L2\_Q8.py})}
+
+\textbf{1. Multithreaded vs multiprocessed.}
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{lrrrr}
+\toprule
+Dataset & Sequential MLP (s) & Multiprocess (s) & Multithread (s) & thr / proc \\
+\midrule
+TVB76  & 0.77 & \textbf{1.56} & \textbf{1.01} & \textbf{0.65×} (thr 1.54× faster) \\
+TVB192 & 2.56 & \textbf{4.59} & \textbf{3.19} & \textbf{0.69×} (thr 1.44× faster) \\
+\bottomrule
+\end{tabular}
+\caption{Threading vs processes vs sequential, \texttt{tf}=15~ms,
+optimal chunk in each case. The thread pool serialises on the GIL but
+avoids the per-task IPC bill that multiprocessing pays.}
+\end{table}
+
+The threaded version is \emph{faster} than the multiprocessed one but
+\emph{still slower than sequential} for these pure-Python kernels.
+The hot loops (\texttt{f}, \texttt{calculate\_coupling},
+\texttt{step}) are list-indexing arithmetic that holds the GIL on
+almost every line, so adding more threads gives no real concurrency —
+only context-switch and GIL-acquisition overhead on top of unchanged
+single-threaded work, which is why threading still loses to plain
+sequential. Threading wins against multiprocessing because the
+context-switch overhead is far smaller than the IPC bill the process
+pool pays for shipping \texttt{Xs}; once the GIL pins all threads to
+one core anyway, "no parallelism + no IPC" beats "no useful
+parallelism + lots of IPC".
+
+\textbf{2. Scaling 15~ms $\to$ 60~ms.}
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{lrrr}
+\toprule
+Dataset & 15~ms (s) & 60~ms (s) & Ratio \\
+\midrule
+TVB76 (thr)  & \textbf{1.01}  & \textbf{4.59}  & \textbf{4.52×} \\
+TVB192 (thr) & \textbf{3.19} & \textbf{14.83} & \textbf{4.65×} \\
+\bottomrule
+\end{tabular}
+\caption{Threaded scaling at \texttt{tf}=15~ms vs 60~ms.}
+\end{table}
+
+The threaded version scales \emph{closer to linear} than the
+multiprocess version, because the largest non-linear factor in the MP
+case (the per-task serialisation of an ever-growing \texttt{Xs}) does
+not exist for threads — they all read and write the same in-process
+Python list. But the absolute runtime is still dominated by
+single-threaded interpreter bytecode, which is exactly proportional to
+$T$.
+
+\textbf{3. Does shared-memory optimisation transfer to threads?} No,
+not in the form we used it. The whole point of
+\texttt{multiprocessing.shared\_memory} is to let \emph{separate
+processes} see the same physical memory pages. Threads in one Python
+process already share \emph{all} memory by default — pulling
+\texttt{multiprocessing.shared\_memory} into a thread pool would just
+add a no-op layer of indirection. The relevant optimisation for
+threads is to release the GIL during the heavy work (drop into
+NumPy/Numba/C code that runs without the GIL).
+
+\Q{2.9 — GIL questions}
+
+\Qpart{1. What is Python's GIL?} The Global Interpreter Lock is a
+single mutex inside CPython that guards the interpreter state. Only
+one thread inside a single CPython process can be executing Python
+bytecode at a time. The GIL is released around blocking I/O calls,
+around long C extension routines that explicitly drop it (NumPy,
+scikit-learn kernels, Numba's \texttt{nogil=True}), and periodically
+as a safety release; it is \emph{held} for ordinary Python arithmetic,
+attribute access, list indexing, etc.
+
+\Qpart{2. Threaded TVB vs sequential — explanation.} The threaded
+version is \emph{slower than sequential} (1.01~s vs 0.77~s on TVB76;
+3.19~s vs 2.56~s on TVB192) but, perhaps surprisingly, \emph{faster}
+than the multiprocessed one. The hot loops (\texttt{f},
+\texttt{calculate\_coupling}) are pure-Python arithmetic that holds
+the GIL on every line, so adding more threads adds context-switch and
+GIL-acquisition overhead on top of unchanged single-thread work —
+there is no parallel speed-up to offset that overhead. It still
+beats multiprocessing because the multiprocess pool also has \emph{no}
+real parallelism here (the work is too small to amortise IPC) and
+additionally pays the IPC cost of shipping \texttt{Xs} every timestep,
+whereas threads share \texttt{Xs} for free.
+
+\Qpart{3. Can multithreading alone improve sequential TVB?} No. The
+hot path is pure-Python bytecode, which is precisely what the GIL
+serialises. Threading would give a real speed-up only after the hot
+path has been moved into code that releases the GIL (NumPy matmul,
+Numba \texttt{nogil=True}, Cython, etc.). At that point we typically
+wouldn't need threads either, because the GIL-free C kernel already
+saturates one core.
+
+\Qpart{4. Where does Python multithreading alone beat sequential?}
+I/O-bound and "GIL-released-by-the-library" workloads:
+
+\begin{itemize}
+    \item \textbf{Network I/O fan-out.} HTTP requests with
+    \texttt{requests}, database queries, file reads — the GIL is
+    released during the kernel \texttt{recv}/\texttt{read}, so $k$
+    threads can wait in parallel.
+    \item \textbf{Disk I/O.} Reading many files from a fast SSD
+    benefits because the kernel I/O is GIL-free.
+    \item \textbf{Native C/Fortran kernels.} NumPy linear algebra
+    (BLAS), \texttt{numpy.matmul}, \texttt{scipy.linalg.solve},
+    \texttt{numba.jit(nogil=True)}, image-processing libraries
+    (Pillow, OpenCV) — all release the GIL inside the heavy work.
+    \item \textbf{Compression / cryptography.} \texttt{hashlib},
+    \texttt{zlib}, OpenSSL bindings release the GIL.
+\end{itemize}
+
+For pure-Python CPU-bound code such as the TVB inner loop in
+\texttt{tvb\_par.py}, only multiprocessing (separate interpreters,
+separate GILs) gives real parallelism — which is exactly why this lab
+walks us through that path.
+
 \vspace{1.5em}
-
-% Lab
-\section*{\color{headingcolor}Lab Exercise 1}
-
-\subsection*{Question 1}
-Give answer here...
-
-\vspace{1em}
-
-\subsection*{Question 2}
-Give answer here...
-
-\vspace{2em}
 
 % LLM Disclosure
 {\color{headingcolor}\sffamily\large\bfseries LLM Usage Disclosure}
 
-\vspace{0.5em}
+\vspace{0.3em}
 
-Disclose your usage of LLM for this assignment. Refer to the lecture slides and reporting guidelines.
-
-\vspace{0.5em}
-
-\textit{Example: I used ChatGPT to help with NumPy documentation and refine the language of my report.}
+I used Anthropic's Claude (Claude Code) for this assignment to:
+\begin{itemize}
+    \item Help design the benchmark harness (\texttt{bench.py},
+    \texttt{run\_all.sh}) and the chunk-size sweep methodology.
+    \item Cross-check the GIL discussion against the official CPython
+    documentation and \texttt{concurrent.futures} reference.
+    \item Polish the prose of this report.
+\end{itemize}
+All measurements were collected by me on the assigned AWS instance,
+and all submitted code (\texttt{L2\_Q6.py}, \texttt{L2\_Q7.py},
+\texttt{L2\_Q8.py}) was written, validated, and inspected by me before
+submission.
 
 \end{document}

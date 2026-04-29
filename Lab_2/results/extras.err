@@ -1,0 +1,19 @@
+# par tvb76 15 40 --repeats 3 --tag Cstar_15 @ 16:04:36
+# par tvb76 60 40 --repeats 3 --tag Cstar_60 @ 16:04:42
+# par tvb192 15 128 --repeats 3 --tag Cstar_15 @ 16:05:42
+# par tvb192 60 128 --repeats 3 --tag Cstar_60 @ 16:05:57
+# par_sm tvb76 15 40 --repeats 3 --tag Dstar_par_sm @ 16:08:56
+# par_sm tvb192 15 128 --repeats 3 --tag Dstar_par_sm @ 16:09:02
+# par_smi tvb76 15 40 --repeats 3 --tag Estar_par_smi @ 16:09:29
+# par_smi tvb192 15 128 --repeats 3 --tag Estar_par_smi @ 16:09:33
+# Q6 tvb76 chunk=40 @ 16:09:49
+# Q6 tvb192 chunk=128 @ 16:09:52
+# Q6 tvb998 chunk=256 @ 16:09:56
+# Q7 200 sims @ 16:10:07
+# thr tvb76 15 40 --repeats 3 --tag H_thr @ 16:10:53
+# thr tvb76 60 40 --repeats 3 --tag H_thr @ 16:10:56
+# thr tvb192 15 128 --repeats 3 --tag H_thr @ 16:11:11
+# thr tvb192 60 128 --repeats 3 --tag H_thr @ 16:11:21
+# py-spy record TVB192 chunk=128 @ 16:12:06
+# validate_q6 @ 16:12:12
+# EXTRAS DONE @ 16:12:13

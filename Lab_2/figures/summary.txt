@@ -1,0 +1,23 @@
+# Phase B chunk sweeps (single rep each):
+  TVB76 : [(2, 13.94609808921814), (4, 7.246184349060059), (8, 4.26334810256958), (16, 2.3265435695648193), (24, 1.993617057800293), (32, 1.6865363121032715), (40, 1.4605319499969482), (48, 1.4712963104248047), (56, 1.5104491710662842), (64, 1.48897385597229), (76, 1.5173757076263428)]
+  TVB192: [(2, 75.09033846855164), (4, 38.0429425239563), (8, 19.646543502807617), (16, 11.487175464630127), (32, 6.806923866271973), (48, 6.079397201538086), (64, 5.545228004455566), (96, 5.053049564361572), (128, 4.528679370880127), (160, 5.235728979110718), (192, 5.391572952270508)]
+  TVB998 par_sm sweep: [(32, 69.34474849700928), (64, 69.29136943817139), (128, 69.82914471626282), (256, 73.23534274101257), (512, 134.11758065223694)]
+  TVB998 par_smi sweep: [(32, 51.47016525268555), (64, 51.266632318496704), (128, 51.20568871498108), (256, 44.6305251121521), (512, 84.82872867584229)]
+
+# Headline timings (min of 3):
+  A_seq          seq_mlp  tvb76   tf=15.0 chunk=None min=0.772s mean=0.772s
+  A_seq          seq_mlp  tvb192  tf=15.0 chunk=None min=2.561s mean=2.568s
+  A_par40        par      tvb76   tf=15.0 chunk=40 min=1.484s mean=1.548s
+  A_par40        par      tvb192  tf=15.0 chunk=40 min=6.157s mean=6.302s
+  Cstar_15       par      tvb76   tf=15.0 chunk=40 min=1.558s mean=1.609s
+  Cstar_15       par      tvb192  tf=15.0 chunk=128 min=4.592s mean=4.767s
+  Cstar_60       par      tvb76   tf=60.0 chunk=40 min=19.338s mean=19.993s
+  Cstar_60       par      tvb192  tf=60.0 chunk=128 min=58.808s mean=59.582s
+  Dstar_par_sm   par_sm   tvb76   tf=15.0 chunk=40 min=1.836s mean=1.904s
+  Dstar_par_sm   par_sm   tvb192  tf=15.0 chunk=128 min=8.540s mean=8.618s
+  Estar_par_smi  par_smi  tvb76   tf=15.0 chunk=40 min=1.248s mean=1.418s
+  Estar_par_smi  par_smi  tvb192  tf=15.0 chunk=128 min=4.967s mean=5.021s
+  H_thr          thr      tvb76   tf=15.0 chunk=40 min=1.013s mean=1.026s
+  H_thr          thr      tvb76   tf=60.0 chunk=40 min=4.586s mean=4.642s
+  H_thr          thr      tvb192  tf=15.0 chunk=128 min=3.192s mean=3.209s
+  H_thr          thr      tvb192  tf=60.0 chunk=128 min=14.827s mean=14.986s

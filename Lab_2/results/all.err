@@ -1,0 +1,45 @@
+# seq_mlp tvb76 15 --repeats 3 --tag A_seq @ 15:43:10
+# par tvb76 15 40 --repeats 3 --tag A_par40 @ 15:43:13
+# seq_mlp tvb192 15 --repeats 3 --tag A_seq @ 15:43:18
+# par tvb192 15 40 --repeats 3 --tag A_par40 @ 15:43:26
+# par tvb76 15 2 --repeats 1 --tag B_sweep76 @ 15:43:46
+# par tvb76 15 4 --repeats 1 --tag B_sweep76 @ 15:44:00
+# par tvb76 15 8 --repeats 1 --tag B_sweep76 @ 15:44:08
+# par tvb76 15 16 --repeats 1 --tag B_sweep76 @ 15:44:12
+# par tvb76 15 24 --repeats 1 --tag B_sweep76 @ 15:44:15
+# par tvb76 15 32 --repeats 1 --tag B_sweep76 @ 15:44:18
+# par tvb76 15 40 --repeats 1 --tag B_sweep76 @ 15:44:20
+# par tvb76 15 48 --repeats 1 --tag B_sweep76 @ 15:44:22
+# par tvb76 15 56 --repeats 1 --tag B_sweep76 @ 15:44:24
+# par tvb76 15 64 --repeats 1 --tag B_sweep76 @ 15:44:26
+# par tvb76 15 76 --repeats 1 --tag B_sweep76 @ 15:44:28
+# par tvb192 15 2 --repeats 1 --tag B_sweep192 @ 15:44:30
+# par tvb192 15 4 --repeats 1 --tag B_sweep192 @ 15:45:45
+# par tvb192 15 8 --repeats 1 --tag B_sweep192 @ 15:46:24
+# par tvb192 15 16 --repeats 1 --tag B_sweep192 @ 15:46:44
+# par tvb192 15 32 --repeats 1 --tag B_sweep192 @ 15:46:56
+# par tvb192 15 48 --repeats 1 --tag B_sweep192 @ 15:47:03
+# par tvb192 15 64 --repeats 1 --tag B_sweep192 @ 15:47:10
+# par tvb192 15 96 --repeats 1 --tag B_sweep192 @ 15:47:16
+# par tvb192 15 128 --repeats 1 --tag B_sweep192 @ 15:47:21
+# par tvb192 15 160 --repeats 1 --tag B_sweep192 @ 15:47:26
+# par tvb192 15 192 --repeats 1 --tag B_sweep192 @ 15:47:32
+# par tvb76 15 76 --repeats 3 --tag C_opt15 @ 15:47:38
+# par tvb76 60 76 --repeats 3 --tag C_opt60 @ 15:47:43
+# par tvb192 15 192 --repeats 3 --tag C_opt15 @ 15:48:29
+# par tvb192 60 192 --repeats 3 --tag C_opt60 @ 15:48:46
+# par_sm tvb76 15 76 --repeats 3 --tag D_par_sm @ 15:51:16
+# par_sm tvb192 15 192 --repeats 3 --tag D_par_sm @ 15:51:26
+# par_sm tvb998 15 32 --repeats 1 --tag D_sm_sweep998 @ 15:52:03
+# par_sm tvb998 15 64 --repeats 1 --tag D_sm_sweep998 @ 15:53:13
+# par_sm tvb998 15 128 --repeats 1 --tag D_sm_sweep998 @ 15:54:22
+# par_sm tvb998 15 256 --repeats 1 --tag D_sm_sweep998 @ 15:55:33
+# par_sm tvb998 15 512 --repeats 1 --tag D_sm_sweep998 @ 15:56:46
+# par_smi tvb76 15 76 --repeats 3 --tag E_par_smi @ 15:59:01
+# par_smi tvb192 15 192 --repeats 3 --tag E_par_smi @ 15:59:07
+# par_smi tvb998 15 32 --repeats 1 --tag E_smi_sweep998 @ 15:59:29
+# par_smi tvb998 15 64 --repeats 1 --tag E_smi_sweep998 @ 16:00:21
+# par_smi tvb998 15 128 --repeats 1 --tag E_smi_sweep998 @ 16:01:12
+# par_smi tvb998 15 256 --repeats 1 --tag E_smi_sweep998 @ 16:02:04
+# par_smi tvb998 15 512 --repeats 1 --tag E_smi_sweep998 @ 16:02:49
+# DONE @ 16:04:15

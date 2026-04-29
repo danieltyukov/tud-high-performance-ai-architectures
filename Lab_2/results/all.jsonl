@@ -1,0 +1,136 @@
+[simulate] Mode: dense
+[simulate] Coupling Time: 0.143722s
+[simulate] Step Time: 0.618106s
+[simulate] Total Time: 0.769399s
+{"mode": "seq_mlp", "dataset": "tvb76", "tf": 15.0, "chunk": null, "rep": 0, "time_s": 0.7717232704162598, "tag": "A_seq"}
+[simulate] Mode: dense
+[simulate] Coupling Time: 0.146044s
+[simulate] Step Time: 0.617199s
+[simulate] Total Time: 0.771034s
+{"mode": "seq_mlp", "dataset": "tvb76", "tf": 15.0, "chunk": null, "rep": 1, "time_s": 0.772963285446167, "tag": "A_seq"}
+[simulate] Mode: dense
+[simulate] Coupling Time: 0.145090s
+[simulate] Step Time: 0.617719s
+[simulate] Total Time: 0.770595s
+{"mode": "seq_mlp", "dataset": "tvb76", "tf": 15.0, "chunk": null, "rep": 2, "time_s": 0.7726163864135742, "tag": "A_seq"}
+{"mode": "seq_mlp", "dataset": "tvb76", "tf": 15.0, "chunk": null, "repeats": 3, "min_s": 0.7717232704162598, "mean_s": 0.7724343140920004, "summary": true, "tag": "A_seq"}
+{"mode": "par", "dataset": "tvb76", "tf": 15.0, "chunk": 40, "rep": 0, "time_s": 1.5282490253448486, "tag": "A_par40"}
+{"mode": "par", "dataset": "tvb76", "tf": 15.0, "chunk": 40, "rep": 1, "time_s": 1.4839496612548828, "tag": "A_par40"}
+{"mode": "par", "dataset": "tvb76", "tf": 15.0, "chunk": 40, "rep": 2, "time_s": 1.6316351890563965, "tag": "A_par40"}
+{"mode": "par", "dataset": "tvb76", "tf": 15.0, "chunk": 40, "repeats": 3, "min_s": 1.4839496612548828, "mean_s": 1.5479446252187092, "summary": true, "tag": "A_par40"}
+[simulate] Mode: dense
+[simulate] Coupling Time: 0.996726s
+[simulate] Step Time: 1.536353s
+[simulate] Total Time: 2.552346s
+{"mode": "seq_mlp", "dataset": "tvb192", "tf": 15.0, "chunk": null, "rep": 0, "time_s": 2.5613889694213867, "tag": "A_seq"}
+[simulate] Mode: dense
+[simulate] Coupling Time: 1.005934s
+[simulate] Step Time: 1.529257s
+[simulate] Total Time: 2.554580s
+{"mode": "seq_mlp", "dataset": "tvb192", "tf": 15.0, "chunk": null, "rep": 1, "time_s": 2.563805103302002, "tag": "A_seq"}
+[simulate] Mode: dense
+[simulate] Coupling Time: 1.020711s
+[simulate] Step Time: 1.529393s
+[simulate] Total Time: 2.569871s
+{"mode": "seq_mlp", "dataset": "tvb192", "tf": 15.0, "chunk": null, "rep": 2, "time_s": 2.579178810119629, "tag": "A_seq"}
+{"mode": "seq_mlp", "dataset": "tvb192", "tf": 15.0, "chunk": null, "repeats": 3, "min_s": 2.5613889694213867, "mean_s": 2.568124294281006, "summary": true, "tag": "A_seq"}
+{"mode": "par", "dataset": "tvb192", "tf": 15.0, "chunk": 40, "rep": 0, "time_s": 6.557573080062866, "tag": "A_par40"}
+{"mode": "par", "dataset": "tvb192", "tf": 15.0, "chunk": 40, "rep": 1, "time_s": 6.190991401672363, "tag": "A_par40"}
+{"mode": "par", "dataset": "tvb192", "tf": 15.0, "chunk": 40, "rep": 2, "time_s": 6.157162666320801, "tag": "A_par40"}
+{"mode": "par", "dataset": "tvb192", "tf": 15.0, "chunk": 40, "repeats": 3, "min_s": 6.157162666320801, "mean_s": 6.30190904935201, "summary": true, "tag": "A_par40"}
+{"mode": "par", "dataset": "tvb76", "tf": 15.0, "chunk": 2, "rep": 0, "time_s": 13.94609808921814, "tag": "B_sweep76"}
+{"mode": "par", "dataset": "tvb76", "tf": 15.0, "chunk": 2, "repeats": 1, "min_s": 13.94609808921814, "mean_s": 13.94609808921814, "summary": true, "tag": "B_sweep76"}
+{"mode": "par", "dataset": "tvb76", "tf": 15.0, "chunk": 4, "rep": 0, "time_s": 7.246184349060059, "tag": "B_sweep76"}
+{"mode": "par", "dataset": "tvb76", "tf": 15.0, "chunk": 4, "repeats": 1, "min_s": 7.246184349060059, "mean_s": 7.246184349060059, "summary": true, "tag": "B_sweep76"}
+{"mode": "par", "dataset": "tvb76", "tf": 15.0, "chunk": 8, "rep": 0, "time_s": 4.26334810256958, "tag": "B_sweep76"}
+{"mode": "par", "dataset": "tvb76", "tf": 15.0, "chunk": 8, "repeats": 1, "min_s": 4.26334810256958, "mean_s": 4.26334810256958, "summary": true, "tag": "B_sweep76"}
+{"mode": "par", "dataset": "tvb76", "tf": 15.0, "chunk": 16, "rep": 0, "time_s": 2.3265435695648193, "tag": "B_sweep76"}
+{"mode": "par", "dataset": "tvb76", "tf": 15.0, "chunk": 16, "repeats": 1, "min_s": 2.3265435695648193, "mean_s": 2.3265435695648193, "summary": true, "tag": "B_sweep76"}
+{"mode": "par", "dataset": "tvb76", "tf": 15.0, "chunk": 24, "rep": 0, "time_s": 1.993617057800293, "tag": "B_sweep76"}
+{"mode": "par", "dataset": "tvb76", "tf": 15.0, "chunk": 24, "repeats": 1, "min_s": 1.993617057800293, "mean_s": 1.993617057800293, "summary": true, "tag": "B_sweep76"}
+{"mode": "par", "dataset": "tvb76", "tf": 15.0, "chunk": 32, "rep": 0, "time_s": 1.6865363121032715, "tag": "B_sweep76"}
+{"mode": "par", "dataset": "tvb76", "tf": 15.0, "chunk": 32, "repeats": 1, "min_s": 1.6865363121032715, "mean_s": 1.6865363121032715, "summary": true, "tag": "B_sweep76"}
+{"mode": "par", "dataset": "tvb76", "tf": 15.0, "chunk": 40, "rep": 0, "time_s": 1.4605319499969482, "tag": "B_sweep76"}
+{"mode": "par", "dataset": "tvb76", "tf": 15.0, "chunk": 40, "repeats": 1, "min_s": 1.4605319499969482, "mean_s": 1.4605319499969482, "summary": true, "tag": "B_sweep76"}
+{"mode": "par", "dataset": "tvb76", "tf": 15.0, "chunk": 48, "rep": 0, "time_s": 1.4712963104248047, "tag": "B_sweep76"}
+{"mode": "par", "dataset": "tvb76", "tf": 15.0, "chunk": 48, "repeats": 1, "min_s": 1.4712963104248047, "mean_s": 1.4712963104248047, "summary": true, "tag": "B_sweep76"}
+{"mode": "par", "dataset": "tvb76", "tf": 15.0, "chunk": 56, "rep": 0, "time_s": 1.5104491710662842, "tag": "B_sweep76"}
+{"mode": "par", "dataset": "tvb76", "tf": 15.0, "chunk": 56, "repeats": 1, "min_s": 1.5104491710662842, "mean_s": 1.5104491710662842, "summary": true, "tag": "B_sweep76"}
+{"mode": "par", "dataset": "tvb76", "tf": 15.0, "chunk": 64, "rep": 0, "time_s": 1.48897385597229, "tag": "B_sweep76"}
+{"mode": "par", "dataset": "tvb76", "tf": 15.0, "chunk": 64, "repeats": 1, "min_s": 1.48897385597229, "mean_s": 1.48897385597229, "summary": true, "tag": "B_sweep76"}
+{"mode": "par", "dataset": "tvb76", "tf": 15.0, "chunk": 76, "rep": 0, "time_s": 1.5173757076263428, "tag": "B_sweep76"}
+{"mode": "par", "dataset": "tvb76", "tf": 15.0, "chunk": 76, "repeats": 1, "min_s": 1.5173757076263428, "mean_s": 1.5173757076263428, "summary": true, "tag": "B_sweep76"}
+{"mode": "par", "dataset": "tvb192", "tf": 15.0, "chunk": 2, "rep": 0, "time_s": 75.09033846855164, "tag": "B_sweep192"}
+{"mode": "par", "dataset": "tvb192", "tf": 15.0, "chunk": 2, "repeats": 1, "min_s": 75.09033846855164, "mean_s": 75.09033846855164, "summary": true, "tag": "B_sweep192"}
+{"mode": "par", "dataset": "tvb192", "tf": 15.0, "chunk": 4, "rep": 0, "time_s": 38.0429425239563, "tag": "B_sweep192"}
+{"mode": "par", "dataset": "tvb192", "tf": 15.0, "chunk": 4, "repeats": 1, "min_s": 38.0429425239563, "mean_s": 38.0429425239563, "summary": true, "tag": "B_sweep192"}
+{"mode": "par", "dataset": "tvb192", "tf": 15.0, "chunk": 8, "rep": 0, "time_s": 19.646543502807617, "tag": "B_sweep192"}
+{"mode": "par", "dataset": "tvb192", "tf": 15.0, "chunk": 8, "repeats": 1, "min_s": 19.646543502807617, "mean_s": 19.646543502807617, "summary": true, "tag": "B_sweep192"}
+{"mode": "par", "dataset": "tvb192", "tf": 15.0, "chunk": 16, "rep": 0, "time_s": 11.487175464630127, "tag": "B_sweep192"}
+{"mode": "par", "dataset": "tvb192", "tf": 15.0, "chunk": 16, "repeats": 1, "min_s": 11.487175464630127, "mean_s": 11.487175464630127, "summary": true, "tag": "B_sweep192"}
+{"mode": "par", "dataset": "tvb192", "tf": 15.0, "chunk": 32, "rep": 0, "time_s": 6.806923866271973, "tag": "B_sweep192"}
+{"mode": "par", "dataset": "tvb192", "tf": 15.0, "chunk": 32, "repeats": 1, "min_s": 6.806923866271973, "mean_s": 6.806923866271973, "summary": true, "tag": "B_sweep192"}
+{"mode": "par", "dataset": "tvb192", "tf": 15.0, "chunk": 48, "rep": 0, "time_s": 6.079397201538086, "tag": "B_sweep192"}
+{"mode": "par", "dataset": "tvb192", "tf": 15.0, "chunk": 48, "repeats": 1, "min_s": 6.079397201538086, "mean_s": 6.079397201538086, "summary": true, "tag": "B_sweep192"}
+{"mode": "par", "dataset": "tvb192", "tf": 15.0, "chunk": 64, "rep": 0, "time_s": 5.545228004455566, "tag": "B_sweep192"}
+{"mode": "par", "dataset": "tvb192", "tf": 15.0, "chunk": 64, "repeats": 1, "min_s": 5.545228004455566, "mean_s": 5.545228004455566, "summary": true, "tag": "B_sweep192"}
+{"mode": "par", "dataset": "tvb192", "tf": 15.0, "chunk": 96, "rep": 0, "time_s": 5.053049564361572, "tag": "B_sweep192"}
+{"mode": "par", "dataset": "tvb192", "tf": 15.0, "chunk": 96, "repeats": 1, "min_s": 5.053049564361572, "mean_s": 5.053049564361572, "summary": true, "tag": "B_sweep192"}
+{"mode": "par", "dataset": "tvb192", "tf": 15.0, "chunk": 128, "rep": 0, "time_s": 4.528679370880127, "tag": "B_sweep192"}
+{"mode": "par", "dataset": "tvb192", "tf": 15.0, "chunk": 128, "repeats": 1, "min_s": 4.528679370880127, "mean_s": 4.528679370880127, "summary": true, "tag": "B_sweep192"}
+{"mode": "par", "dataset": "tvb192", "tf": 15.0, "chunk": 160, "rep": 0, "time_s": 5.235728979110718, "tag": "B_sweep192"}
+{"mode": "par", "dataset": "tvb192", "tf": 15.0, "chunk": 160, "repeats": 1, "min_s": 5.235728979110718, "mean_s": 5.235728979110718, "summary": true, "tag": "B_sweep192"}
+{"mode": "par", "dataset": "tvb192", "tf": 15.0, "chunk": 192, "rep": 0, "time_s": 5.391572952270508, "tag": "B_sweep192"}
+{"mode": "par", "dataset": "tvb192", "tf": 15.0, "chunk": 192, "repeats": 1, "min_s": 5.391572952270508, "mean_s": 5.391572952270508, "summary": true, "tag": "B_sweep192"}
+{"mode": "par", "dataset": "tvb76", "tf": 15.0, "chunk": 76, "rep": 0, "time_s": 1.5475811958312988, "tag": "C_opt15"}
+{"mode": "par", "dataset": "tvb76", "tf": 15.0, "chunk": 76, "rep": 1, "time_s": 1.6019740104675293, "tag": "C_opt15"}
+{"mode": "par", "dataset": "tvb76", "tf": 15.0, "chunk": 76, "rep": 2, "time_s": 1.6723320484161377, "tag": "C_opt15"}
+{"mode": "par", "dataset": "tvb76", "tf": 15.0, "chunk": 76, "repeats": 3, "min_s": 1.5475811958312988, "mean_s": 1.6072957515716553, "summary": true, "tag": "C_opt15"}
+{"mode": "par", "dataset": "tvb76", "tf": 60.0, "chunk": 76, "rep": 0, "time_s": 14.840581893920898, "tag": "C_opt60"}
+{"mode": "par", "dataset": "tvb76", "tf": 60.0, "chunk": 76, "rep": 1, "time_s": 15.259794473648071, "tag": "C_opt60"}
+{"mode": "par", "dataset": "tvb76", "tf": 60.0, "chunk": 76, "rep": 2, "time_s": 15.232715606689453, "tag": "C_opt60"}
+{"mode": "par", "dataset": "tvb76", "tf": 60.0, "chunk": 76, "repeats": 3, "min_s": 14.840581893920898, "mean_s": 15.111030658086142, "summary": true, "tag": "C_opt60"}
+{"mode": "par", "dataset": "tvb192", "tf": 15.0, "chunk": 192, "rep": 0, "time_s": 5.396596908569336, "tag": "C_opt15"}
+{"mode": "par", "dataset": "tvb192", "tf": 15.0, "chunk": 192, "rep": 1, "time_s": 5.484827280044556, "tag": "C_opt15"}
+{"mode": "par", "dataset": "tvb192", "tf": 15.0, "chunk": 192, "rep": 2, "time_s": 5.364484548568726, "tag": "C_opt15"}
+{"mode": "par", "dataset": "tvb192", "tf": 15.0, "chunk": 192, "repeats": 3, "min_s": 5.364484548568726, "mean_s": 5.415302912394206, "summary": true, "tag": "C_opt15"}
+{"mode": "par", "dataset": "tvb192", "tf": 60.0, "chunk": 192, "rep": 0, "time_s": 51.05612134933472, "tag": "C_opt60"}
+{"mode": "par", "dataset": "tvb192", "tf": 60.0, "chunk": 192, "rep": 1, "time_s": 49.70553231239319, "tag": "C_opt60"}
+{"mode": "par", "dataset": "tvb192", "tf": 60.0, "chunk": 192, "rep": 2, "time_s": 49.063005685806274, "tag": "C_opt60"}
+{"mode": "par", "dataset": "tvb192", "tf": 60.0, "chunk": 192, "repeats": 3, "min_s": 49.063005685806274, "mean_s": 49.94155311584473, "summary": true, "tag": "C_opt60"}
+{"mode": "par_sm", "dataset": "tvb76", "tf": 15.0, "chunk": 76, "rep": 0, "time_s": 3.278942823410034, "tag": "D_par_sm"}
+{"mode": "par_sm", "dataset": "tvb76", "tf": 15.0, "chunk": 76, "rep": 1, "time_s": 3.246680498123169, "tag": "D_par_sm"}
+{"mode": "par_sm", "dataset": "tvb76", "tf": 15.0, "chunk": 76, "rep": 2, "time_s": 3.3427789211273193, "tag": "D_par_sm"}
+{"mode": "par_sm", "dataset": "tvb76", "tf": 15.0, "chunk": 76, "repeats": 3, "min_s": 3.246680498123169, "mean_s": 3.2894674142201743, "summary": true, "tag": "D_par_sm"}
+{"mode": "par_sm", "dataset": "tvb192", "tf": 15.0, "chunk": 192, "rep": 0, "time_s": 11.902019500732422, "tag": "D_par_sm"}
+{"mode": "par_sm", "dataset": "tvb192", "tf": 15.0, "chunk": 192, "rep": 1, "time_s": 12.077426671981812, "tag": "D_par_sm"}
+{"mode": "par_sm", "dataset": "tvb192", "tf": 15.0, "chunk": 192, "rep": 2, "time_s": 12.075843334197998, "tag": "D_par_sm"}
+{"mode": "par_sm", "dataset": "tvb192", "tf": 15.0, "chunk": 192, "repeats": 3, "min_s": 11.902019500732422, "mean_s": 12.018429835637411, "summary": true, "tag": "D_par_sm"}
+{"mode": "par_sm", "dataset": "tvb998", "tf": 15.0, "chunk": 32, "rep": 0, "time_s": 69.34474849700928, "tag": "D_sm_sweep998"}
+{"mode": "par_sm", "dataset": "tvb998", "tf": 15.0, "chunk": 32, "repeats": 1, "min_s": 69.34474849700928, "mean_s": 69.34474849700928, "summary": true, "tag": "D_sm_sweep998"}
+{"mode": "par_sm", "dataset": "tvb998", "tf": 15.0, "chunk": 64, "rep": 0, "time_s": 69.29136943817139, "tag": "D_sm_sweep998"}
+{"mode": "par_sm", "dataset": "tvb998", "tf": 15.0, "chunk": 64, "repeats": 1, "min_s": 69.29136943817139, "mean_s": 69.29136943817139, "summary": true, "tag": "D_sm_sweep998"}
+{"mode": "par_sm", "dataset": "tvb998", "tf": 15.0, "chunk": 128, "rep": 0, "time_s": 69.82914471626282, "tag": "D_sm_sweep998"}
+{"mode": "par_sm", "dataset": "tvb998", "tf": 15.0, "chunk": 128, "repeats": 1, "min_s": 69.82914471626282, "mean_s": 69.82914471626282, "summary": true, "tag": "D_sm_sweep998"}
+{"mode": "par_sm", "dataset": "tvb998", "tf": 15.0, "chunk": 256, "rep": 0, "time_s": 73.23534274101257, "tag": "D_sm_sweep998"}
+{"mode": "par_sm", "dataset": "tvb998", "tf": 15.0, "chunk": 256, "repeats": 1, "min_s": 73.23534274101257, "mean_s": 73.23534274101257, "summary": true, "tag": "D_sm_sweep998"}
+{"mode": "par_sm", "dataset": "tvb998", "tf": 15.0, "chunk": 512, "rep": 0, "time_s": 134.11758065223694, "tag": "D_sm_sweep998"}
+{"mode": "par_sm", "dataset": "tvb998", "tf": 15.0, "chunk": 512, "repeats": 1, "min_s": 134.11758065223694, "mean_s": 134.11758065223694, "summary": true, "tag": "D_sm_sweep998"}
+{"mode": "par_smi", "dataset": "tvb76", "tf": 15.0, "chunk": 76, "rep": 0, "time_s": 1.7546818256378174, "tag": "E_par_smi"}
+{"mode": "par_smi", "dataset": "tvb76", "tf": 15.0, "chunk": 76, "rep": 1, "time_s": 1.746915578842163, "tag": "E_par_smi"}
+{"mode": "par_smi", "dataset": "tvb76", "tf": 15.0, "chunk": 76, "rep": 2, "time_s": 1.7729132175445557, "tag": "E_par_smi"}
+{"mode": "par_smi", "dataset": "tvb76", "tf": 15.0, "chunk": 76, "repeats": 3, "min_s": 1.746915578842163, "mean_s": 1.758170207341512, "summary": true, "tag": "E_par_smi"}
+{"mode": "par_smi", "dataset": "tvb192", "tf": 15.0, "chunk": 192, "rep": 0, "time_s": 7.149818181991577, "tag": "E_par_smi"}
+{"mode": "par_smi", "dataset": "tvb192", "tf": 15.0, "chunk": 192, "rep": 1, "time_s": 7.135509014129639, "tag": "E_par_smi"}
+{"mode": "par_smi", "dataset": "tvb192", "tf": 15.0, "chunk": 192, "rep": 2, "time_s": 7.159154653549194, "tag": "E_par_smi"}
+{"mode": "par_smi", "dataset": "tvb192", "tf": 15.0, "chunk": 192, "repeats": 3, "min_s": 7.135509014129639, "mean_s": 7.148160616556804, "summary": true, "tag": "E_par_smi"}
+{"mode": "par_smi", "dataset": "tvb998", "tf": 15.0, "chunk": 32, "rep": 0, "time_s": 51.47016525268555, "tag": "E_smi_sweep998"}
+{"mode": "par_smi", "dataset": "tvb998", "tf": 15.0, "chunk": 32, "repeats": 1, "min_s": 51.47016525268555, "mean_s": 51.47016525268555, "summary": true, "tag": "E_smi_sweep998"}
+{"mode": "par_smi", "dataset": "tvb998", "tf": 15.0, "chunk": 64, "rep": 0, "time_s": 51.266632318496704, "tag": "E_smi_sweep998"}
+{"mode": "par_smi", "dataset": "tvb998", "tf": 15.0, "chunk": 64, "repeats": 1, "min_s": 51.266632318496704, "mean_s": 51.266632318496704, "summary": true, "tag": "E_smi_sweep998"}
+{"mode": "par_smi", "dataset": "tvb998", "tf": 15.0, "chunk": 128, "rep": 0, "time_s": 51.20568871498108, "tag": "E_smi_sweep998"}
+{"mode": "par_smi", "dataset": "tvb998", "tf": 15.0, "chunk": 128, "repeats": 1, "min_s": 51.20568871498108, "mean_s": 51.20568871498108, "summary": true, "tag": "E_smi_sweep998"}
+{"mode": "par_smi", "dataset": "tvb998", "tf": 15.0, "chunk": 256, "rep": 0, "time_s": 44.6305251121521, "tag": "E_smi_sweep998"}
+{"mode": "par_smi", "dataset": "tvb998", "tf": 15.0, "chunk": 256, "repeats": 1, "min_s": 44.6305251121521, "mean_s": 44.6305251121521, "summary": true, "tag": "E_smi_sweep998"}
+{"mode": "par_smi", "dataset": "tvb998", "tf": 15.0, "chunk": 512, "rep": 0, "time_s": 84.82872867584229, "tag": "E_smi_sweep998"}
+{"mode": "par_smi", "dataset": "tvb998", "tf": 15.0, "chunk": 512, "repeats": 1, "min_s": 84.82872867584229, "mean_s": 84.82872867584229, "summary": true, "tag": "E_smi_sweep998"}

@@ -1,0 +1,66 @@
+{"mode": "par", "dataset": "tvb76", "tf": 15.0, "chunk": 40, "rep": 0, "time_s": 1.5578064918518066, "tag": "Cstar_15"}
+{"mode": "par", "dataset": "tvb76", "tf": 15.0, "chunk": 40, "rep": 1, "time_s": 1.5683550834655762, "tag": "Cstar_15"}
+{"mode": "par", "dataset": "tvb76", "tf": 15.0, "chunk": 40, "rep": 2, "time_s": 1.701136827468872, "tag": "Cstar_15"}
+{"mode": "par", "dataset": "tvb76", "tf": 15.0, "chunk": 40, "repeats": 3, "min_s": 1.5578064918518066, "mean_s": 1.6090994675954182, "summary": true, "tag": "Cstar_15"}
+{"mode": "par", "dataset": "tvb76", "tf": 60.0, "chunk": 40, "rep": 0, "time_s": 19.665709257125854, "tag": "Cstar_60"}
+{"mode": "par", "dataset": "tvb76", "tf": 60.0, "chunk": 40, "rep": 1, "time_s": 19.33781099319458, "tag": "Cstar_60"}
+{"mode": "par", "dataset": "tvb76", "tf": 60.0, "chunk": 40, "rep": 2, "time_s": 20.976484537124634, "tag": "Cstar_60"}
+{"mode": "par", "dataset": "tvb76", "tf": 60.0, "chunk": 40, "repeats": 3, "min_s": 19.33781099319458, "mean_s": 19.993334929148357, "summary": true, "tag": "Cstar_60"}
+{"mode": "par", "dataset": "tvb192", "tf": 15.0, "chunk": 128, "rep": 0, "time_s": 4.642320156097412, "tag": "Cstar_15"}
+{"mode": "par", "dataset": "tvb192", "tf": 15.0, "chunk": 128, "rep": 1, "time_s": 4.5919575691223145, "tag": "Cstar_15"}
+{"mode": "par", "dataset": "tvb192", "tf": 15.0, "chunk": 128, "rep": 2, "time_s": 5.065231800079346, "tag": "Cstar_15"}
+{"mode": "par", "dataset": "tvb192", "tf": 15.0, "chunk": 128, "repeats": 3, "min_s": 4.5919575691223145, "mean_s": 4.7665031750996905, "summary": true, "tag": "Cstar_15"}
+{"mode": "par", "dataset": "tvb192", "tf": 60.0, "chunk": 128, "rep": 0, "time_s": 60.47055411338806, "tag": "Cstar_60"}
+{"mode": "par", "dataset": "tvb192", "tf": 60.0, "chunk": 128, "rep": 1, "time_s": 58.80782723426819, "tag": "Cstar_60"}
+{"mode": "par", "dataset": "tvb192", "tf": 60.0, "chunk": 128, "rep": 2, "time_s": 59.46740484237671, "tag": "Cstar_60"}
+{"mode": "par", "dataset": "tvb192", "tf": 60.0, "chunk": 128, "repeats": 3, "min_s": 58.80782723426819, "mean_s": 59.581928730010986, "summary": true, "tag": "Cstar_60"}
+{"mode": "par_sm", "dataset": "tvb76", "tf": 15.0, "chunk": 40, "rep": 0, "time_s": 2.007330894470215, "tag": "Dstar_par_sm"}
+{"mode": "par_sm", "dataset": "tvb76", "tf": 15.0, "chunk": 40, "rep": 1, "time_s": 1.868422508239746, "tag": "Dstar_par_sm"}
+{"mode": "par_sm", "dataset": "tvb76", "tf": 15.0, "chunk": 40, "rep": 2, "time_s": 1.8359544277191162, "tag": "Dstar_par_sm"}
+{"mode": "par_sm", "dataset": "tvb76", "tf": 15.0, "chunk": 40, "repeats": 3, "min_s": 1.8359544277191162, "mean_s": 1.9039026101430256, "summary": true, "tag": "Dstar_par_sm"}
+{"mode": "par_sm", "dataset": "tvb192", "tf": 15.0, "chunk": 128, "rep": 0, "time_s": 8.539507389068604, "tag": "Dstar_par_sm"}
+{"mode": "par_sm", "dataset": "tvb192", "tf": 15.0, "chunk": 128, "rep": 1, "time_s": 8.596781730651855, "tag": "Dstar_par_sm"}
+{"mode": "par_sm", "dataset": "tvb192", "tf": 15.0, "chunk": 128, "rep": 2, "time_s": 8.71895980834961, "tag": "Dstar_par_sm"}
+{"mode": "par_sm", "dataset": "tvb192", "tf": 15.0, "chunk": 128, "repeats": 3, "min_s": 8.539507389068604, "mean_s": 8.61841630935669, "summary": true, "tag": "Dstar_par_sm"}
+{"mode": "par_smi", "dataset": "tvb76", "tf": 15.0, "chunk": 40, "rep": 0, "time_s": 1.5456960201263428, "tag": "Estar_par_smi"}
+{"mode": "par_smi", "dataset": "tvb76", "tf": 15.0, "chunk": 40, "rep": 1, "time_s": 1.4600064754486084, "tag": "Estar_par_smi"}
+{"mode": "par_smi", "dataset": "tvb76", "tf": 15.0, "chunk": 40, "rep": 2, "time_s": 1.2477619647979736, "tag": "Estar_par_smi"}
+{"mode": "par_smi", "dataset": "tvb76", "tf": 15.0, "chunk": 40, "repeats": 3, "min_s": 1.2477619647979736, "mean_s": 1.4178214867909749, "summary": true, "tag": "Estar_par_smi"}
+{"mode": "par_smi", "dataset": "tvb192", "tf": 15.0, "chunk": 128, "rep": 0, "time_s": 5.03365683555603, "tag": "Estar_par_smi"}
+{"mode": "par_smi", "dataset": "tvb192", "tf": 15.0, "chunk": 128, "rep": 1, "time_s": 4.966524362564087, "tag": "Estar_par_smi"}
+{"mode": "par_smi", "dataset": "tvb192", "tf": 15.0, "chunk": 128, "rep": 2, "time_s": 5.061374187469482, "tag": "Estar_par_smi"}
+{"mode": "par_smi", "dataset": "tvb192", "tf": 15.0, "chunk": 128, "repeats": 3, "min_s": 4.966524362564087, "mean_s": 5.0205184618632, "summary": true, "tag": "Estar_par_smi"}
+0.47196459770202637
+{"mode": "L2_Q6", "dataset": "tvb76", "tf": 15.0, "chunk": 40, "rep": 0, "time_s": 0.4746682643890381, "tag": "F_q6"}
+0.4158186912536621
+{"mode": "L2_Q6", "dataset": "tvb76", "tf": 15.0, "chunk": 40, "rep": 1, "time_s": 0.41837596893310547, "tag": "F_q6"}
+0.40268540382385254
+{"mode": "L2_Q6", "dataset": "tvb76", "tf": 15.0, "chunk": 40, "rep": 2, "time_s": 0.40528059005737305, "tag": "F_q6"}
+1.0180299282073975
+{"mode": "L2_Q6", "dataset": "tvb192", "tf": 15.0, "chunk": 128, "rep": 0, "time_s": 1.0254929065704346, "tag": "F_q6"}
+1.094656229019165
+{"mode": "L2_Q6", "dataset": "tvb192", "tf": 15.0, "chunk": 128, "rep": 1, "time_s": 1.1021239757537842, "tag": "F_q6"}
+0.9946565628051758
+{"mode": "L2_Q6", "dataset": "tvb192", "tf": 15.0, "chunk": 128, "rep": 2, "time_s": 1.0021216869354248, "tag": "F_q6"}
+3.1803884506225586
+{"mode": "L2_Q6", "dataset": "tvb998", "tf": 15.0, "chunk": 256, "rep": 0, "time_s": 3.3182177543640137, "tag": "F_q6"}
+3.154271125793457
+{"mode": "L2_Q6", "dataset": "tvb998", "tf": 15.0, "chunk": 256, "rep": 1, "time_s": 3.291611433029175, "tag": "F_q6"}
+2.8546674251556396
+{"mode": "L2_Q6", "dataset": "tvb998", "tf": 15.0, "chunk": 256, "rep": 2, "time_s": 2.9929921627044678, "tag": "F_q6"}
+{"mode": "thr", "dataset": "tvb76", "tf": 15.0, "chunk": 40, "rep": 0, "time_s": 1.0134427547454834, "tag": "H_thr"}
+{"mode": "thr", "dataset": "tvb76", "tf": 15.0, "chunk": 40, "rep": 1, "time_s": 1.0454227924346924, "tag": "H_thr"}
+{"mode": "thr", "dataset": "tvb76", "tf": 15.0, "chunk": 40, "rep": 2, "time_s": 1.0182383060455322, "tag": "H_thr"}
+{"mode": "thr", "dataset": "tvb76", "tf": 15.0, "chunk": 40, "repeats": 3, "min_s": 1.0134427547454834, "mean_s": 1.0257012844085693, "summary": true, "tag": "H_thr"}
+{"mode": "thr", "dataset": "tvb76", "tf": 60.0, "chunk": 40, "rep": 0, "time_s": 4.585630178451538, "tag": "H_thr"}
+{"mode": "thr", "dataset": "tvb76", "tf": 60.0, "chunk": 40, "rep": 1, "time_s": 4.73942232131958, "tag": "H_thr"}
+{"mode": "thr", "dataset": "tvb76", "tf": 60.0, "chunk": 40, "rep": 2, "time_s": 4.601562738418579, "tag": "H_thr"}
+{"mode": "thr", "dataset": "tvb76", "tf": 60.0, "chunk": 40, "repeats": 3, "min_s": 4.585630178451538, "mean_s": 4.6422050793965655, "summary": true, "tag": "H_thr"}
+{"mode": "thr", "dataset": "tvb192", "tf": 15.0, "chunk": 128, "rep": 0, "time_s": 3.1918857097625732, "tag": "H_thr"}
+{"mode": "thr", "dataset": "tvb192", "tf": 15.0, "chunk": 128, "rep": 1, "time_s": 3.210312843322754, "tag": "H_thr"}
+{"mode": "thr", "dataset": "tvb192", "tf": 15.0, "chunk": 128, "rep": 2, "time_s": 3.2255783081054688, "tag": "H_thr"}
+{"mode": "thr", "dataset": "tvb192", "tf": 15.0, "chunk": 128, "repeats": 3, "min_s": 3.1918857097625732, "mean_s": 3.209258953730265, "summary": true, "tag": "H_thr"}
+{"mode": "thr", "dataset": "tvb192", "tf": 60.0, "chunk": 128, "rep": 0, "time_s": 15.165781021118164, "tag": "H_thr"}
+{"mode": "thr", "dataset": "tvb192", "tf": 60.0, "chunk": 128, "rep": 1, "time_s": 14.82688593864441, "tag": "H_thr"}
+{"mode": "thr", "dataset": "tvb192", "tf": 60.0, "chunk": 128, "rep": 2, "time_s": 14.966030836105347, "tag": "H_thr"}
+{"mode": "thr", "dataset": "tvb192", "tf": 60.0, "chunk": 128, "repeats": 3, "min_s": 14.82688593864441, "mean_s": 14.98623259862264, "summary": true, "tag": "H_thr"}

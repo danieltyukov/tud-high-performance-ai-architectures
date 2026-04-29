@@ -48,8 +48,11 @@ PY
 done
 
 #### Phase G — Q2.7 (L2_Q7) 200 sims ####
+# We measure only the parallel-of-sims wall time. The "Q6 200x back-to-back"
+# baseline is computed in fill_report.py as 200 * T_one_Q6 from Phase F to
+# avoid burning the AWS budget on a redundant serial sweep.
 echo "# Q7 200 sims @ $(date -u +%H:%M:%S)" >&2
-python3 -u L2_Q7.py --dataset tvb192 --n 200 --tf 15 --baseline q6_serial --chunk 128 \
+python3 -u L2_Q7.py --dataset tvb192 --n 200 --tf 15 --chunk 128 \
   > ../results/q7_run.log 2>&1
 
 #### Phase H — Q2.8 (L2_Q8 multithreaded) ####
@@ -59,5 +62,19 @@ for ds_tf in "tvb76 15" "tvb76 60" "tvb192 15" "tvb192 60"; do
   [ "$ds" = "tvb192" ] && chunk=128
   run thr "$ds" "$tf" "$chunk" --repeats 3 --tag H_thr
 done
+
+#### Phase I — Q2.2.5 py-spy profiling at the optimal chunk (TVB192/128) ####
+echo "# py-spy record TVB192 chunk=128 @ $(date -u +%H:%M:%S)" >&2
+PYSPY=$HOME/.local/bin/py-spy
+"$PYSPY" record -d 25 -o ../figures/pyspy_flame.svg --format flamegraph -- \
+  python3 bench.py par tvb192 15 128 --repeats 1 --tag I_pyspy \
+  > ../results/pyspy_run.log 2>&1 || true
+# Render flame graph to PNG for inclusion in the LaTeX report.
+convert -density 200 ../figures/pyspy_flame.svg ../figures/pyspy_top.png \
+  >> ../results/pyspy_run.log 2>&1 || true
+
+# Validation run for Q2.6 numerical equivalence.
+echo "# validate_q6 @ $(date -u +%H:%M:%S)" >&2
+python3 validate_q6.py > ../results/validate_q6.txt 2>&1 || true
 
 echo "# EXTRAS DONE @ $(date -u +%H:%M:%S)" >&2
