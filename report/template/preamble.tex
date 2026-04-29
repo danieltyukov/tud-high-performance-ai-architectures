@@ -1,0 +1,122 @@
+% =============================================================================
+% Shared preamble for CESE5040 lab reports.
+% Lab-agnostic. Copy this file into each labN/ folder so each lab is a
+% self-contained Overleaf-uploadable project.
+%
+% Compile with pdflatex.
+% =============================================================================
+
+% ---------- Page geometry ----------------------------------------------------
+\usepackage[a4paper, margin=2.5cm, headheight=14pt]{geometry}
+
+% ---------- Fonts and language -----------------------------------------------
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[english]{babel}
+\usepackage{microtype}
+
+% ---------- Math -------------------------------------------------------------
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{mathtools}
+\usepackage{bm}
+\usepackage{siunitx}
+\sisetup{
+    detect-weight        = true,
+    detect-family        = true,
+    range-phrase         = {--},
+    range-units          = single,
+    per-mode             = symbol,
+}
+
+% ---------- Tables and figures -----------------------------------------------
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{caption}
+\captionsetup{labelfont=bf, font=small, skip=6pt}
+\usepackage{subcaption}
+\usepackage{float}
+
+% ---------- Code listings ----------------------------------------------------
+\usepackage{listings}
+\usepackage{xcolor}
+\definecolor{pyKeyword}{HTML}{0033B3}
+\definecolor{pyString}{HTML}{067D17}
+\definecolor{pyComment}{HTML}{8C8C8C}
+\definecolor{pyNumber}{HTML}{1750EB}
+\definecolor{pyBg}{HTML}{F7F7F7}
+\definecolor{pyFrame}{HTML}{D0D0D0}
+
+\lstdefinestyle{python}{
+    language            = Python,
+    basicstyle          = \ttfamily\footnotesize,
+    keywordstyle        = \color{pyKeyword}\bfseries,
+    stringstyle         = \color{pyString},
+    commentstyle        = \color{pyComment}\itshape,
+    numberstyle         = \tiny\color{pyComment},
+    numbers             = left,
+    numbersep           = 8pt,
+    stepnumber          = 1,
+    breaklines          = true,
+    breakatwhitespace   = true,
+    showstringspaces    = false,
+    frame               = single,
+    rulecolor           = \color{pyFrame},
+    backgroundcolor     = \color{pyBg},
+    captionpos          = b,
+    tabsize             = 4,
+    columns             = fullflexible,
+    keepspaces          = true,
+    morekeywords        = {self, np, plt, jit, prange},
+}
+
+\lstdefinestyle{shell}{
+    basicstyle          = \ttfamily\footnotesize,
+    breaklines          = true,
+    showstringspaces    = false,
+    frame               = single,
+    rulecolor           = \color{pyFrame},
+    backgroundcolor     = \color{pyBg},
+    captionpos          = b,
+}
+
+\lstset{style=python}
+
+% ---------- Hyperlinks and cross-refs ----------------------------------------
+\usepackage[hidelinks]{hyperref}
+\usepackage[capitalize, noabbrev]{cleveref}
+
+% ---------- Headers and footers ----------------------------------------------
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small CESE5040 -- HPC and AI Architectures}
+\fancyhead[R]{\small \labnumber{} -- \studentname{} (\studentnumber{})}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% ---------- Section formatting -----------------------------------------------
+\usepackage{titlesec}
+\titleformat{\section}{\Large\bfseries}{\thesection}{0.7em}{}
+\titleformat{\subsection}{\large\bfseries}{\thesubsection}{0.6em}{}
+\titleformat{\subsubsection}{\normalsize\bfseries}{\thesubsubsection}{0.5em}{}
+
+% ---------- Identity placeholders --------------------------------------------
+% Override these in the main file via \renewcommand BEFORE \begin{document}.
+\newcommand{\labnumber}{Lab~?}
+\newcommand{\studentname}{Firstname Lastname}
+\newcommand{\studentnumber}{0000000}
+
+% ---------- Authoring helpers ------------------------------------------------
+% Question stub matching the docx template.
+\newcommand{\answerhere}{\textit{Give answer here\dots}}
+\newcommand{\todoitem}[1]{\textcolor{red}{\textbf{TODO:} #1}}
+
+% Inline code shorthand
+\newcommand{\code}[1]{\texttt{#1}}
+
+% Big-O notation
+\newcommand{\bigO}[1]{\ensuremath{\mathcal{O}\!\left(#1\right)}}

@@ -1,0 +1,121 @@
+% =============================================================================
+% CESE5040 Lab report -- generic template.
+%
+% TO INSTANTIATE FOR A NEW LAB:
+%   1. Copy this whole template/ folder to ../labN/  (use ../new-lab.sh N).
+%   2. Rename Lab.tex -> LabN.tex.
+%   3. Edit the THREE \renewcommand lines below to set lab number and (if a
+%      different student is using the template) name + number.
+%   4. Edit \labtitle to match the lab's actual subtitle.
+%   5. Add or remove "Question N" subsections to match the lab's exercises.
+%
+% Compile: pdflatex LabN.tex   (twice, for cross-references)
+% Submit:  rename produced PDF to LabN_Firstname_Lastname_StudentNumber.pdf
+% =============================================================================
+
+\documentclass[11pt, a4paper]{article}
+
+% ---------------------------------------------------------------------------
+% Lab-specific identity. Edit these for each lab.
+% ---------------------------------------------------------------------------
+\newcommand{\labtitle}{Lab Assignment N: <subtitle>}
+
+\input{preamble}
+
+\renewcommand{\labnumber}{Lab~N}
+\renewcommand{\studentname}{Daniel Tyukov}
+\renewcommand{\studentnumber}{5714699}
+
+% ---------------------------------------------------------------------------
+
+\title{%
+    \vspace{-2em}
+    \large CESE5040 -- High-Performance Computing and AI Architectures \\[0.4em]
+    \Large \textbf{\labtitle} \\[0.6em]
+    \rule{\linewidth}{0.4pt}
+}
+\author{\studentname{} \\ \texttt{\studentnumber}}
+\date{\today}
+
+\begin{document}
+\maketitle
+\thispagestyle{fancy}
+
+% =============================================================================
+\section{Student information}
+% =============================================================================
+
+\noindent\textbf{Name:}~\studentname{}\\
+\textbf{Student number:}~\studentnumber{}
+
+\paragraph{Notes.}
+\begin{itemize}
+    \itemsep0em
+    \item Provide your answers following the template made available in Brightspace.
+    \item Provide your name and student number inside the report.
+    \item Provide your student number on the file name.
+    \item Provide your answers at least 3 days before the next lecture.
+    \item When answering the questions, take all measurements using the same machine.
+\end{itemize}
+
+% =============================================================================
+\section{Lab Exercise N}
+% =============================================================================
+
+% Add or remove Question subsections to match the actual lab's exercise count.
+% Inside each, use \paragraph{(a) ...} for sub-questions when needed.
+
+\subsection{Question 1}
+\answerhere{}
+
+\subsection{Question 2}
+\answerhere{}
+
+\subsection{Question 3}
+\answerhere{}
+
+% Example reusable building blocks ------------------------------------------
+
+% Timing table:
+% \begin{table}[H]
+%     \centering
+%     \caption{Execution times for <thing> over <K> timesteps on the course AWS VM.}
+%     \label{tab:timings}
+%     \begin{tabular}{lrr}
+%         \toprule
+%         Variant & Time (s) & Speedup ($\times$) \\
+%         \midrule
+%         Baseline      &  & 1.00 \\
+%         Optimized     &  &      \\
+%         \bottomrule
+%     \end{tabular}
+% \end{table}
+
+% Code listing from your submitted .py file:
+% \lstinputlisting[style=python,
+%                  caption={\code{LN\_Qx.py} -- <description>.},
+%                  label={lst:qx}]{code/LN_Qx.py}
+
+% Figure:
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=0.7\linewidth]{figures/<plot>.pdf}
+%     \caption{<caption>.}
+%     \label{fig:<plot>}
+% \end{figure}
+
+% =============================================================================
+\section{LLM Usage Disclosure}
+% =============================================================================
+
+\noindent
+Disclose your usage of LLM for this assignment. Refer to the lecture slides and
+reporting guidelines to find out the LLM usage policy of the course.
+
+\paragraph{Example.}
+\textit{I used ChatGPT to help with NumPy documentation and refine the language of my report.}
+
+\paragraph{My disclosure.}
+\answerhere{}
+
+\end{document}

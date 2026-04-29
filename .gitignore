@@ -1,0 +1,48 @@
+# --- Secrets (must never be tracked) ---
+secrets.txt
+*.secrets
+.env
+.env.*
+*.pem
+*.key
+id_rsa*
+credentials
+.aws/
+
+# --- Python ---
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# --- Lab / TVB byproducts ---
+.cache/
+*.npz.tmp
+results/*.npz
+*.prof
+*.lprof
+
+# --- LaTeX build artifacts ---
+*.aux
+*.log
+*.out
+*.toc
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+*.bbl
+*.blg
+
+# --- Editor / OS ---
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
