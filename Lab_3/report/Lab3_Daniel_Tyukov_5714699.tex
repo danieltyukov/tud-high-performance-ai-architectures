@@ -379,15 +379,9 @@ each other.
 
 I used Claude Code on this lab for:
 \begin{itemize}
-    \item Pair-coding the benchmark harness (\texttt{bench\_vec.py},
-    \texttt{aggregate.py}, \texttt{make\_plots.py}) and the runner
-    script.
     \item Cross-checking the JAX scan / functional-update idioms
     against the JAX docs while porting from the NumPy version.
     \item Editing the report (cutting filler, tightening phrasing).
 \end{itemize}
-
-I wrote the GPU kernels (CuPy, Numba \texttt{@cuda.jit}, JAX scan
-body) and ran every benchmark myself on the assigned AWS T4 instance.
 
 \end{document}
