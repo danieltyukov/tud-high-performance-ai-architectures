@@ -1,0 +1,81 @@
+==14824== NVPROF is profiling process 14824, command: python3 L3_Q1.py tvb192 --tf 150 --reps 1 --warmup 0
+==14824== Profiling application: python3 L3_Q1.py tvb192 --tf 150 --reps 1 --warmup 0
+==14824== Profiling result:
+            Type  Time(%)      Time     Calls       Avg       Min       Max  Name
+ GPU activities:   59.85%  578.51ms      2999  192.90us  184.25us  241.12us  volta_dgemm_64x64_nn
+                   10.91%  105.41ms      2999  35.147us  33.567us  43.776us  volta_dgemm_64x64_nt
+                    4.04%  39.021ms      2999  13.011us  10.848us  16.224us  void cub::CUB_300102_SM_500_520_600_610_700_750_800_860_890_900_1000_1200::detail::reduce::DeviceSegmentedReduceKernel<cub::CUB_300102_SM_500_520_600_610_700_750_800_860_890_900_1000_1200::detail::reduce::policy_hub<double, int, cuda::std::__4::plus<void>>::Policy1000, double*, double*, thrust::THRUST_300102_SM_500_520_600_610_700_750_800_860_890_900_1000_1200_NS::transform_iterator<_arange, thrust::THRUST_300102_SM_500_520_600_610_700_750_800_860_890_900_1000_1200_NS::counting_iterator<int, thrust::THRUST_300102_SM_500_520_600_610_700_750_800_860_890_900_1000_1200_NS::use_default, thrust::THRUST_300102_SM_500_520_600_610_700_750_800_860_890_900_1000_1200_NS::use_default, thrust::THRUST_300102_SM_500_520_600_610_700_750_800_860_890_900_1000_1200_NS::use_default, thrust::THRUST_300102_SM_500_520_600_610_700_750_800_860_890_900_1000_1200_NS::compile_time_value<int=1>>, thrust::THRUST_300102_SM_500_520_600_610_700_750_800_860_890_900_1000_1200_NS::use_default, thrust::THRUST_300102_SM_500_520_600_610_700_750_800_860_890_900_1000_1200_NS::use_default>, thrust::THRUST_300102_SM_500_520_600_610_700_750_800_860_890_900_1000_1200_NS::transform_iterator<_arange, thrust::THRUST_300102_SM_500_520_600_610_700_750_800_860_890_900_1000_1200_NS::counting_iterator<int, thrust::THRUST_300102_SM_500_520_600_610_700_750_800_860_890_900_1000_1200_NS::use_default, thrust::THRUST_300102_SM_500_520_600_610_700_750_800_860_890_900_1000_1200_NS::use_default, thrust::THRUST_300102_SM_500_520_600_610_700_750_800_860_890_900_1000_1200_NS::use_default, thrust::THRUST_300102_SM_500_520_600_610_700_750_800_860_890_900_1000_1200_NS::compile_time_value<int=1>>, thrust::THRUST_300102_SM_500_520_600_610_700_750_800_860_890_900_1000_1200_NS::use_default, thrust::THRUST_300102_SM_500_520_600_610_700_750_800_860_890_900_1000_1200_NS::use_default>, int, cuda::std::__4::plus<void>, double, double>(int, void, cuda::std::__4::plus<void>, cub::CUB_300102_SM_500_520_600_610_700_750_800_860_890_900_1000_1200::detail::reduce::policy_hub<double, int, cuda::std::__4::plus<void>>::Policy1000, double*, _arange)
+                    3.89%  37.563ms     11996  3.1310us  2.6870us  4.3840us  cupy_add__float64_float64_float64
+                    2.78%  26.867ms      5998  4.4790us  3.9360us  5.7600us  cupy_prepare_array_indexing
+                    2.10%  20.278ms      2999  6.7610us  6.3040us  8.4480us  cupy_take
+                    1.88%  18.202ms      5998  3.0340us  2.8480us  4.0000us  cupy_copy__float64_float64
+                    1.30%  12.540ms      2999  4.1810us  4.0000us  5.0240us  cupy_equal__int64_int64_bool
+                    1.26%  12.185ms      2999  4.0620us  3.7760us  5.2150us  cupy_multiply__float64_float64_float64
+                    1.11%  10.742ms      2999  3.5810us  3.3600us  4.4160us  cupy_subtract__float64_float_float64
+                    1.09%  10.518ms      2999  3.5070us  3.3280us  4.1920us  cupy_where__bool_int64_int_int64
+                    1.09%  10.488ms      2999  3.4970us  3.3270us  4.1600us  cupy_where__bool_int_int64_int64
+                    1.08%  10.438ms      2999  3.4800us  3.2950us  4.1600us  cupy_where__bool_float64_float_float64
+                    1.05%  10.131ms      2999  3.3780us  3.2000us  4.0640us  cupy_subtract__int_int64_int64
+                    1.04%  10.018ms      2999  3.3400us  3.1680us  4.0000us  cupy_equal__int64_int_bool
+                    1.04%  10.013ms      2999  3.3380us  3.1360us  5.2160us  cupy_less_equal__int64_int_bool
+                    1.02%  9.8916ms      2999  3.2980us  3.1360us  3.9360us  cupy_maximum__float64_float_float64
+                    0.97%  9.3335ms      2999  3.1120us  2.9750us  3.6800us  cupy_bitwise_or__bool_bool_bool
+                    0.87%  8.4095ms      3000  2.8030us  2.6550us  38.783us  [CUDA memset]
+                    0.82%  7.9682ms      2999  2.6560us  2.4960us  3.4240us  cupy_multiply__float_float64_float64
+                    0.82%  7.9420ms      2999  2.6480us  2.5270us  3.1040us  cupy_multiply__float64_float_float64
+                    0.01%  101.63us         6  16.938us     640ns  50.272us  [CUDA memcpy HtoD]
+                    0.00%  5.4720us         2  2.7360us  2.5600us  2.9120us  cupy_arange__int_int_int64
+                    0.00%  3.3600us         1  3.3600us  3.3600us  3.3600us  cupy_fill
+      API calls:   42.96%  426.07ms     65981  6.4570us  4.5310us  699.83us  cuLaunchKernel
+                   18.72%  185.66ms    372017     499ns     301ns  705.32us  cudaGetDevice
+                   17.65%  175.03ms        21  8.3346ms  3.7120us  174.44ms  cudaMalloc
+                    7.27%  72.096ms      8997  8.0130us  6.5220us  647.10us  cudaLaunchKernel
+                    4.54%  45.069ms         1  45.069ms  45.069ms  45.069ms  cudaFuncGetAttributes
+                    3.42%  33.929ms      3000  11.309us  9.8150us  651.71us  cudaMemsetAsync
+                    1.27%  12.598ms         1  12.598ms  12.598ms  12.598ms  cudaGetSymbolAddress
+                    1.17%  11.623ms     44988     258ns     125ns  633.78us  cudaGetLastError
+                    0.67%  6.6397ms      6004  1.1050us     744ns  20.946us  cudaStreamIsCapturing
+                    0.56%  5.5682ms      2999  1.8560us  1.4960us  66.655us  cudaOccupancyMaxActiveBlocksPerMultiprocessorWithFlags
+                    0.54%  5.4013ms       447  12.083us     142ns  748.05us  cuDeviceGetAttribute
+                    0.25%  2.5068ms        23  108.99us  83.578us  264.38us  cuModuleLoadData
+                    0.22%  2.1814ms         8  272.68us     544ns  2.1703ms  cudaOccupancyMaxActiveBlocksPerMultiprocessor
+                    0.19%  1.8904ms         4  472.59us  8.3050us  1.7180ms  cudaFree
+                    0.19%  1.8537ms      5998     309ns     132ns  612.90us  cudaPeekAtLastError
+                    0.13%  1.2650ms        23  54.999us     303ns  640.04us  cudaDeviceGetAttribute
+                    0.11%  1.1107ms         3  370.24us  4.0600us  1.0996ms  cudaHostAlloc
+                    0.05%  497.59us        10  49.759us  30.365us  87.200us  cuModuleUnload
+                    0.03%  325.46us      1257     258ns     153ns  5.7970us  cuGetProcAddress
+                    0.01%  73.596us         5  14.719us  5.3400us  20.766us  cuDeviceGetName
+                    0.01%  61.842us         3  20.614us  3.8680us  52.758us  cudaStreamSynchronize
+                    0.01%  56.955us         6  9.4920us  5.0280us  19.690us  cudaMemcpyAsync
+                    0.00%  45.783us         1  45.783us  45.783us  45.783us  cudaMemGetInfo
+                    0.00%  28.543us        24  1.1890us     458ns  7.6530us  cudaEventCreateWithFlags
+                    0.00%  24.727us         6  4.1210us  2.2060us  11.199us  cudaEventRecord
+                    0.00%  22.295us        11  2.0260us     858ns  6.0850us  cudaEventQuery
+                    0.00%  21.763us        23     946ns     386ns  5.4150us  cudaEventDestroy
+                    0.00%  19.134us         4  4.7830us  1.2270us  13.997us  cudaDeviceSynchronize
+                    0.00%  16.857us         6  2.8090us  1.0350us  8.3130us  cudaPointerGetAttributes
+                    0.00%  16.442us        23     714ns     543ns  1.0760us  cuModuleGetFunction
+                    0.00%  16.041us         6  2.6730us  1.5930us  3.8110us  cuInit
+                    0.00%  9.6070us         4  2.4010us     471ns  4.1280us  cudaSetDevice
+                    0.00%  7.4970us         6  1.2490us     219ns  5.5530us  cuDeviceGet
+                    0.00%  3.6190us         1  3.6190us  3.6190us  3.6190us  cuDeviceGetPCIBusId
+                    0.00%  2.6130us         5     522ns     168ns  1.6320us  cudaGetDeviceCount
+                    0.00%  2.6090us         6     434ns     175ns  1.6070us  cuDeviceGetCount
+                    0.00%  2.5570us         2  1.2780us     654ns  1.9030us  cudaGetDriverEntryPoint
+                    0.00%  1.8490us         1  1.8490us  1.8490us  1.8490us  cuDevicePrimaryCtxRelease
+                    0.00%  1.8080us         4     452ns     314ns     672ns  cuDeviceTotalMem
+                    0.00%  1.2530us         4     313ns     191ns     631ns  cuModuleGetLoadingMode
+                    0.00%  1.1710us         4     292ns     248ns     335ns  cuDeviceGetUuid
+                    0.00%     772ns         1     772ns     772ns     772ns  cuCtxGetLimit
+                    0.00%     592ns         3     197ns     193ns     203ns  cuDriverGetVersion
+
+==14824== NVTX result:
+==14824==   Thread "<unnamed>" (id = 566362240)
+==14824==     Domain "CCCL"
+==14824==       Range "cub::DeviceSegmentedReduce::Sum"
+            Type  Time(%)      Time     Calls       Avg       Min       Max  Name
+          Range:  100.00%  46.916ms      2999  15.643us  13.590us  652.58us  cub::DeviceSegmentedReduce::Sum
+ GPU activities:  100.00%  39.021ms      2999  13.011us  10.848us  16.224us  void cub::CUB_300102_SM_500_520_600_610_700_750_800_860_890_900_1000_1200::detail::reduce::DeviceSegmentedReduceKernel<cub::CUB_300102_SM_500_520_600_610_700_750_800_860_890_900_1000_1200::detail::reduce::policy_hub<double, int, cuda::std::__4::plus<void>>::Policy1000, double*, double*, thrust::THRUST_300102_SM_500_520_600_610_700_750_800_860_890_900_1000_1200_NS::transform_iterator<_arange, thrust::THRUST_300102_SM_500_520_600_610_700_750_800_860_890_900_1000_1200_NS::counting_iterator<int, thrust::THRUST_300102_SM_500_520_600_610_700_750_800_860_890_900_1000_1200_NS::use_default, thrust::THRUST_300102_SM_500_520_600_610_700_750_800_860_890_900_1000_1200_NS::use_default, thrust::THRUST_300102_SM_500_520_600_610_700_750_800_860_890_900_1000_1200_NS::use_default, thrust::THRUST_300102_SM_500_520_600_610_700_750_800_860_890_900_1000_1200_NS::compile_time_value<int=1>>, thrust::THRUST_300102_SM_500_520_600_610_700_750_800_860_890_900_1000_1200_NS::use_default, thrust::THRUST_300102_SM_500_520_600_610_700_750_800_860_890_900_1000_1200_NS::use_default>, thrust::THRUST_300102_SM_500_520_600_610_700_750_800_860_890_900_1000_1200_NS::transform_iterator<_arange, thrust::THRUST_300102_SM_500_520_600_610_700_750_800_860_890_900_1000_1200_NS::counting_iterator<int, thrust::THRUST_300102_SM_500_520_600_610_700_750_800_860_890_900_1000_1200_NS::use_default, thrust::THRUST_300102_SM_500_520_600_610_700_750_800_860_890_900_1000_1200_NS::use_default, thrust::THRUST_300102_SM_500_520_600_610_700_750_800_860_890_900_1000_1200_NS::use_default, thrust::THRUST_300102_SM_500_520_600_610_700_750_800_860_890_900_1000_1200_NS::compile_time_value<int=1>>, thrust::THRUST_300102_SM_500_520_600_610_700_750_800_860_890_900_1000_1200_NS::use_default, thrust::THRUST_300102_SM_500_520_600_610_700_750_800_860_890_900_1000_1200_NS::use_default>, int, cuda::std::__4::plus<void>, double, double>(int, void, cuda::std::__4::plus<void>, cub::CUB_300102_SM_500_520_600_610_700_750_800_860_890_900_1000_1200::detail::reduce::policy_hub<double, int, cuda::std::__4::plus<void>>::Policy1000, double*, _arange)
+      API calls:  100.00%  24.789ms      2999  8.2650us  7.3050us  42.512us  cudaLaunchKernel
+
