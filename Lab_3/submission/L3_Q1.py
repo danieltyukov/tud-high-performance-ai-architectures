@@ -1,11 +1,3 @@
-"""Q3.1.3 — TVB on GPU using CuPy.
-
-The numerics are identical to tvb_vec_full.py (Q3.1.2). Only difference:
-arrays live on the GPU and ops dispatch through CuPy. The MLP weights and
-the connectivity matrices are uploaded once, before the time loop, so that
-the only per-step cost is the GPU compute itself plus a few small kernel
-launches.
-"""
 import time
 
 import numpy as np

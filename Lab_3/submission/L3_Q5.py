@@ -1,9 +1,3 @@
-"""Q3.5 — TVB using JAX (CPU and GPU).
-
-The whole timestep loop is one jax.lax.scan, fully traced under jax.jit, so
-XLA produces a single fused executable. Switching backend is done via the
-JAX_PLATFORMS env var which we set from --platform before importing JAX.
-"""
 import argparse
 import json
 import os

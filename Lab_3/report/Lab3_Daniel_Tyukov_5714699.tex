@@ -89,6 +89,8 @@
     \item Submitted code: \texttt{L3\_Q1.py}, \texttt{L3\_Q2.py},
     \texttt{L3\_Q4.py}, \texttt{L3\_Q5.py}. \texttt{tvb\_vec\_full.py} is
     the fully refactored NumPy version that L3\_Q1 is built on.
+    \item Sanity check: each implementation reproduces \texttt{tvb\_vec.py}
+    on TVB76/5~ms to within $\approx 3 \times 10^{-15}$ (FP reordering noise).
 \end{itemize}
 
 \vspace{0.5em}
@@ -298,12 +300,13 @@ indexing. To run $K$ sims at once I would:
 \begin{itemize}
     \item Allocate \texttt{Xs} as \texttt{[K, N, M, T]} (and pre-fill the
     \texttt{[:, :, :, 0] = -1.0} initial condition for all $K$).
-    \item Switch to a 2D grid: launch
-    \texttt{kernel[(N+TPB-1)//TPB, K, TPB, 1]} so that
-    \texttt{n = cuda.grid(1)[0]} indexes the brain region and
-    \texttt{k = cuda.blockIdx.y} indexes the simulation. Inside the
-    kernel every \texttt{Xs[...]} access gains a leading \texttt{[k]}
-    index. $W$ and $D$ stay shared across all $K$.
+    \item Switch to a 2D grid:
+    \texttt{kernel[((N+TPB-1)//TPB, K), (TPB, 1)](\dots)} so that
+    \texttt{n = cuda.blockIdx.x * cuda.blockDim.x + cuda.threadIdx.x}
+    indexes the brain region and \texttt{k = cuda.blockIdx.y} indexes
+    the simulation. Inside the kernel every \texttt{Xs[\dots]} access
+    gains a leading \texttt{[k]} index. $W$ and $D$ stay shared across
+    all $K$.
     \item Keep the timestep loop in Python so all $K\cdot N$ threads
     finish step $t$ before $t+1$ starts (the kernel-launch boundary
     is the per-timestep barrier).

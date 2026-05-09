@@ -1,11 +1,3 @@
-"""Q3.4 — TVB on GPU using Numba @cuda.jit.
-
-One kernel per timestep, with one thread per brain region. Each thread
-reads its own MLP input from the previous timestep, accumulates the
-coupling sum into a register, runs the [2 -> 64 -> 2] MLP fully unrolled,
-and writes its [x, y] back at index t. Threads only ever write disjoint
-slots in Xs, so no atomics or shared memory are needed.
-"""
 import time
 
 import numpy as np

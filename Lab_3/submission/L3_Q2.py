@@ -1,12 +1,3 @@
-"""Q3.2 — High-throughput TVB on GPU using CuPy.
-
-K independent simulations are batched along a leading K axis. They all share
-the same W and D, so coupling indices and the MLP weights are computed once
-and reused. The state Xs has shape [K, N, M, T] and lives entirely on the
-GPU. Compared to running L3_Q1.py K times back-to-back, this version pays
-one CUDA context cost, one upload of W/D, and lets the GPU run far more
-threads per kernel.
-"""
 import time
 
 import cupy as cp
