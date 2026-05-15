@@ -76,11 +76,10 @@
 
 {\color{headingcolor}\sffamily\large\bfseries Notes}
 
-\begin{itemize}
-    \item Hardware: local laptop, Intel Core Ultra 9 185H, 16 cores / 22 threads, 62 GiB RAM. No NVIDIA GPU on this machine, so every JAX run is on the CPU backend. The MLP and LeNet-5 models are small enough that this is fine for the assignment.
-    \item Software: Python 3.12, JAX 0.10.0 (CPU), Flax 0.12.7, Optax 0.2.8, TensorFlow-CPU for the MNIST loader.
-    \item Submitted scripts: \texttt{L4\_Q4.py} (drives every Q4.4 sub-experiment) and \texttt{L4\_Q6.py} (LeNet-5 implementation plus its sweep). The Q4.5 numbers were produced by a separate runner that wraps the supplied \texttt{mlp\_adv.py} architecture across three seeds; the architecture itself is unchanged.
-    \item Each accuracy figure is a single run at the stated seed. Wall times are wall-clock seconds reported by \texttt{time.perf\_counter()} around the training loop only.
+\begin{itemize}\setlength\itemsep{0.1em}
+    \item Hardware: Intel Core Ultra 9 185H, CPU only. JAX 0.10.0, Flax 0.12.7, Optax 0.2.8, Python 3.12.
+    \item Submitted: \texttt{L4\_Q4.py} and \texttt{L4\_Q6.py}. Q4.5 uses the supplied \texttt{mlp\_adv.py} architecture unchanged.
+    \item Each accuracy is one run at the stated seed. Wall times cover the training loop only.
 \end{itemize}
 
 \vspace{0.5em}
@@ -107,7 +106,7 @@ For $w^1_{21}$ the chain goes one layer further back, through $h_1$:
 \]
 The ReLU derivative is the indicator $\mathbb{1}[z^1_1 > 0]$, which is why dead ReLU units block any gradient signal from reaching $w^1_{21}$.
 
-\Qpart{2} Automatic differentiation (AD) frameworks compute derivatives by walking a computational graph that records every elementary operation (and its known local Jacobian) performed during the forward pass. Two modes exist: forward mode computes one column of the Jacobian per pass and is efficient when the output dimension exceeds the input dimension, and reverse mode (backpropagation) computes one row per pass and is the right choice for scalar-loss training where the input dimension (parameter count) is huge. JAX, PyTorch and TensorFlow all implement reverse-mode AD by tracing the user's Python function into an intermediate representation, then applying the chain rule along the recorded edges in topological order. The benefit is that the user only writes the forward computation; the framework derives gradients exactly (no finite differencing) and at near-forward cost, which makes complex architectures tractable without any hand derivation.
+\Qpart{2} Autodiff frameworks record every elementary op of the forward pass along with its local Jacobian, then walk that graph to compute exact derivatives. Forward mode is cheap when there are few inputs and many outputs; reverse mode (backprop) is cheap in the opposite case, which is what training a scalar loss against millions of parameters demands. JAX, PyTorch, and TensorFlow trace the user's Python into an intermediate representation and apply the chain rule along the recorded edges. The user only writes the forward pass; gradients come back exactly and at near-forward cost, which is what makes deep networks trainable at all.
 
 % =========================================================================
 \Q{4.2 - MLP parameter count and CNN motivation}
@@ -123,18 +122,18 @@ The ReLU derivative is the indicator $\mathbb{1}[z^1_1 > 0]$, which is why dead 
 \]
 For an MNIST-sized example with $I=784$, $L=2$, $H=512$, $O=10$ this gives about $670\text{k}$ parameters, which is already large for a simple toy.
 
-\Qpart{2} Scaling fully-connected layers up is not feasible for harder vision tasks. A single 224$\times$224$\times$3 ImageNet image flattened into a $H=4096$ hidden layer needs $\approx\!617$M parameters in just one weight matrix, so memory and compute explode roughly quadratically with input size. CNNs sidestep this by exploiting two structural priors. First, locality: a feature like an edge is defined by a small neighbourhood of pixels, so each filter only looks at a $k{\times}k$ window. Second, translation invariance: the same edge detector should fire wherever the edge appears, so the filter is applied as a sliding window with shared weights. Together this shrinks the parameter count from $H_{\text{in}} \cdot H_{\text{out}}$ down to $k \cdot k \cdot C_{\text{in}} \cdot C_{\text{out}}$, which is independent of input resolution and several orders of magnitude smaller for typical $k = 3$ or $5$.
+\Qpart{2} Scaling this up is hopeless. A single 224$\times$224$\times$3 ImageNet image flattened into a $H=4096$ hidden layer already needs $\approx\!617$M parameters in one weight matrix. CNNs fix this with two priors: locality (each filter looks at a $k{\times}k$ window) and translation invariance (the same filter slides over the whole image). The parameter count drops from $H_{\text{in}} \cdot H_{\text{out}}$ to $k \cdot k \cdot C_{\text{in}} \cdot C_{\text{out}}$, which is independent of input resolution and several orders of magnitude smaller for typical $k = 3$ or $5$.
 
 % =========================================================================
 \Q{4.3 - Batching, learning rate, fit quality, loss vs accuracy}
 
-\Qpart{1} Two reasons dominate. Averaging the loss over a batch reduces the variance of the gradient estimate, so each step points in a more reliable direction than a single noisy sample would. The second reason is hardware: GPUs and modern CPUs need wide tensors to fill their SIMD or tensor units, so a batch of 128 images runs almost as fast as a single image but does 128 times the useful work. A subtler effect is that very large batches lose the regularising noise of stochastic updates and tend to settle into sharper minima that generalise worse. How the dataset is split into batches also matters. A fixed deterministic order lets the model exploit the order, so the practice is to reshuffle every epoch. If classes are imbalanced, a batch dominated by one class biases the gradient toward that class.
+\Qpart{1} Two reasons. Averaging the loss over a batch lowers the variance of the gradient estimate, so each step points more reliably than a single sample would. And hardware: GPUs need wide tensors to fill their tensor units, so a batch of 128 runs almost as fast as one image but does 128 times the useful work. A subtler effect is that very large batches lose the regularising noise of stochastic updates and settle into sharper minima that generalise worse. How the data is split also matters. A fixed order lets the model exploit it, so the convention is to reshuffle every epoch; with imbalanced classes a single-class batch will bias the gradient.
 
-\Qpart{2} If the learning rate $\alpha$ is too large the parameter updates overshoot the loss minimum at every step and the loss oscillates or diverges, often visible as NaN gradients within a few steps. If $\alpha$ is too small the model still moves in the right direction but the loss drops so slowly that it never reaches a useful minimum within a feasible number of epochs. A scheduled learning rate combines the best of both: start large to make quick progress out of the random initialisation, then drop the rate (step decay, exponential decay, cosine schedule, or one-cycle) so the optimiser can settle into a flat region without bouncing around. Warmup at the very start also helps when the gradients are still poorly conditioned.
+\Qpart{2} Too large and updates overshoot the minimum at every step; loss oscillates or diverges, often NaN within a few steps. Too small and the model moves in the right direction but never reaches a useful minimum in any reasonable budget. A scheduled rate gets both: start large to escape the random init, then decay (step, cosine, one-cycle) so the optimiser can settle. A short warmup at the very start helps when the early gradients are poorly conditioned.
 
-\Qpart{3} Overfitting means the network has memorised the training set, including its noise, so training accuracy is high while test accuracy stalls or drops. The signature is a widening gap between training and validation curves: training loss keeps falling and validation loss rises again. Underfitting is the opposite, both training and test accuracy stay low because the model is not expressive enough or has not trained long enough; the loss curve plateaus high. Common remedies are regularisation (L2, dropout), early stopping, or more data on the overfit side, and a larger model or more epochs on the underfit side.
+\Qpart{3} Overfitting: training accuracy is high while test accuracy stalls or drops. The signature is a widening train-test gap (training loss still falling while validation loss climbs). Underfitting is the opposite: both train and test accuracy stay low because the model is too small or trained too short. Fixes are regularisation (L2, dropout), early stopping, or more data on the overfit side, and more capacity or more epochs on the underfit side.
 
-\Qpart{4} The loss is a continuous, differentiable proxy for whatever discrete metric (here, top-1 accuracy) we actually care about. It measures the probability the model placed on the correct class, so it is sensitive to the margin of every prediction, while accuracy is binary per example. A model can keep pushing the cross-entropy down by becoming overconfident on examples it already classifies correctly. That extra confidence does nothing for accuracy and in fact tends to coincide with overfitting, where training loss keeps dropping while test accuracy plateaus. That is why the early-stopping signal of choice is validation accuracy or validation loss, not training loss.
+\Qpart{4} The loss is a continuous, differentiable proxy for what we actually care about (top-1 accuracy here). It tracks the probability assigned to the correct class, so it reacts to the margin of every prediction; accuracy is binary per example. A model can keep driving cross-entropy down by becoming overconfident on examples it already gets right. That does nothing for accuracy and tends to coincide with overfitting: training loss keeps dropping while test accuracy plateaus. That is why the early-stopping signal of choice is validation accuracy or validation loss, not training loss.
 
 % =========================================================================
 \Q{4.4 - Simple MLP on MNIST (\texttt{L4\_Q4.py})}
@@ -156,11 +155,11 @@ Seed & Untrained acc (\%) & Train acc (\%) & Test acc (\%) \\
 \caption{Per-sample SGD, $\alpha = 10^{-3}$, 10 epochs. Test accuracy spans only 0.17 pp across seeds.}
 \end{table}
 
-The untrained model sits at chance level (about 10\% for ten classes) for every seed, with seed 42 happening to land slightly worse on the test set by random init. After ten epochs all three seeds reach the same neighbourhood, a fraction of a percent apart on test accuracy. The seed shifts the initial weights and the trajectory taken through parameter space but not the final operating point, so trained accuracy is essentially seed-independent for this simple model.
+Untrained accuracy sits at chance ($\approx 10\%$ for ten classes), with seed 42 unlucky on the test set by random init. After ten epochs all three seeds land within 0.2 pp of each other. The seed moves the trajectory but not the final operating point, so for this small model trained accuracy is essentially seed-independent.
 
 \Qpart{2} \textit{Effect of removing the [0,1] normalization.}
 
-Disabling the \texttt{x / 255.0} step at seed 10 collapsed test accuracy from 97.10\% to \textbf{11.34\%} (train 11.24\%), barely above chance. With pixel values left in $[0, 255]$ the first layer sees inputs roughly two orders of magnitude larger than what the default Flax LeCun-normal initialisation was designed for. Pre-activations are then huge, the cross-entropy gradient saturates, and the per-sample SGD step blows past any usable region of parameter space in the first epoch. Normalising to $[0,1]$ keeps activation statistics inside the regime where ReLU and the default initialisation cooperate.
+Dropping the \texttt{x/255} step at seed 10 collapsed test accuracy from 97.10\% to \textbf{11.34\%} (train 11.24\%), barely above chance. Raw pixels are about two orders of magnitude larger than the default LeCun-normal init expects, so the first pre-activations are huge, the gradient saturates, and the very first SGD step blows the parameters past any usable region. Normalising keeps activation statistics in the range the init was designed for.
 
 \Qpart{3} \textit{Learning-rate sweep at \(\alpha \in \{10^{-1}, 10^{-4}, 10^{-7}\}\), seed 10.}
 
@@ -180,7 +179,7 @@ $10^{-7}$ & 11.39 & 11.17 \\
 \caption{Per-sample SGD, 10 epochs. The $10^{-3}$ row is reused from 4.4.1 for context.}
 \end{table}
 
-At $\alpha = 0.1$ each update is so aggressive that single-example gradients overshoot the loss minimum repeatedly; the model still learns the easy digits but never settles, ending 15 pp below baseline. At $\alpha = 10^{-4}$ the optimiser is on a healthy trajectory but ten epochs are not enough to reach the baseline. At $\alpha = 10^{-7}$ the steps are so small that the parameters barely move and the model stays at random-init accuracy.
+At $\alpha = 0.1$ updates are too aggressive for per-sample SGD; the model picks up the easy digits but never settles, ending 15 pp below baseline. At $\alpha = 10^{-4}$ the trajectory is healthy but ten epochs are not enough. At $\alpha = 10^{-7}$ the steps are so tiny that the parameters barely move from their random init.
 
 \Qpart{4} \textit{Mini-batching for batch sizes 32, 64, 128, 256, 512.}
 
@@ -207,7 +206,7 @@ Batch & Train acc (\%) & Test acc (\%) & Wall (s) \\
 \caption{Test accuracy falls monotonically as batch size grows, at fixed $\alpha$.}
 \end{figure}
 
-Two things happen at once. Wall time drops because each batch is one JAX dispatch carrying more work, and accuracy also drops because the effective number of weight updates per epoch shrinks from 60{,}000 (per-sample) to 117 (batch 512). With $\alpha$ held at $10^{-3}$ those few updates are simply not enough; this is the textbook setup for the linear scaling rule of learning rate to batch size, which 4.4.5 verifies.
+Wall time drops because each batch is one JAX dispatch doing more work, and accuracy drops too because the number of weight updates per epoch shrinks from 60{,}000 (per-sample) to 117 (batch 512). With $\alpha$ pinned at $10^{-3}$ those few updates are not enough. This is the textbook setup for the linear scaling rule of learning rate to batch size, which 4.4.5 verifies.
 
 \Qpart{5} \textit{Increasing the learning rate for batch size 64.}
 
@@ -233,7 +232,7 @@ $0.5$     & 99.35 & 97.65 \\
 \caption{Bumping the learning rate recovers the accuracy lost by batching, exactly as the linear scaling rule predicts.}
 \end{figure}
 
-The same model that capped at 87\% with $\alpha = 10^{-3}$ now reaches 97.5\% with $\alpha = 10^{-1}$, matching the per-sample baseline from 4.4.1. Each batch is the average of 64 sample gradients, so the per-step magnitude is roughly $1/64$ of the per-sample case, and the learning rate has to be scaled up by a comparable factor to deliver the same effective update. Beyond $\alpha \approx 0.1$ further gains shrink (train climbs, test stays put), which is the first sign of overfitting.
+The same model that capped at 87\% with $\alpha = 10^{-3}$ reaches 97.5\% at $\alpha = 10^{-1}$, matching the per-sample baseline from 4.4.1. A batch gradient is the average of 64 sample gradients, so the per-step magnitude is roughly $1/64$ of the per-sample case and the rate has to be scaled up by a comparable factor. Beyond $\alpha \approx 0.1$ further gains shrink (train climbs, test stays put), which is the first whiff of overfitting.
 
 \Qpart{6} \textit{Training set reduced to 1000 samples, 20 epochs, batch 64.}
 
@@ -251,16 +250,16 @@ $10^{-1}$ & 96.10 & 86.62 & 9.5 \\
 \caption{1000 samples, 20 epochs, batch 64, seed 10. Two regimes shown.}
 \end{table}
 
-With $\alpha = 10^{-3}$ at batch 64 there are only $1000 / 64 \cdot 20 \approx 312$ weight updates total, far too few to fit even 1000 samples with a 101k-parameter model; both numbers stay at the underfit floor. Switching to the working $\alpha = 10^{-1}$ from 4.4.5 fits the training set almost perfectly (96.1\%) while test accuracy lags ten points behind. This is the textbook overfit regime: ample model capacity, too little data, and no regularisation, so the network memorises noise in the 1000 training examples. The same network on the full 60k-example set generalises fine because more data acts as the regulariser.
+With $\alpha = 10^{-3}$ at batch 64 there are only $1000 / 64 \cdot 20 \approx 312$ updates total, not enough to fit 1000 samples with a 101k-parameter model, so both numbers stay at the underfit floor. Switching to the working $\alpha = 10^{-1}$ from 4.4.5 fits the training set almost perfectly (96.1\%) while test accuracy lags ten points behind. That is the textbook overfit regime: plenty of capacity, too little data, no regularisation. On the full 60k set the same network generalises fine because more data acts as the regulariser.
 
 % =========================================================================
 \Q{4.5 - Regularised MLP (\texttt{mlp\_adv.py})}
 
-\Qpart{1} \textit{What is dropout?} Dropout randomly zeroes a fraction $p$ of the activations during each training step, then re-scales the surviving units by $1/(1-p)$ so the expected magnitude is preserved. At inference time dropout is switched off and every unit participates. The effect is two-fold: it prevents co-adaptation between neurons (no single unit can be relied on, because it might be dropped any iteration), and it acts as an implicit ensemble over the $2^n$ subnetworks defined by which units are kept.
+\Qpart{1} \textit{What is dropout?} Dropout randomly zeroes a fraction $p$ of the activations during each training step and rescales the survivors by $1/(1-p)$ so the expected magnitude is preserved. At inference it is off and every unit participates. The effect is two-fold: neurons cannot co-adapt because any of them might be dropped, and the procedure is an implicit ensemble over the $2^n$ subnetworks defined by the dropout masks.
 
-\Qpart{2} \textit{Is deeper / wider always better?} No. Adding layers and width increases representational capacity but also increases parameters, memory, training time, and the risk of overfitting and of vanishing or exploding gradients (especially without residual connections or careful initialisation). On MNIST in particular, a 512-512 MLP already saturates the dataset, so a 4096-4096-4096 stack would learn nothing useful that the smaller model misses and would just train slower. Depth is most useful when the data has compositional structure that benefits from learned feature hierarchies, which is more true of images, audio and language than of MNIST digits.
+\Qpart{2} \textit{Is deeper / wider always better?} No. More layers and more width add capacity but also add parameters, memory, training time, and the risk of overfitting plus vanishing or exploding gradients (especially without residual connections or careful init). A 512-512 MLP already saturates MNIST; a 4096-4096-4096 stack would learn nothing the smaller model misses and just train slower. Depth pays off when the data has compositional structure, which is more true of images, audio and language than of MNIST digits.
 
-\Qpart{3} \textit{AdamW and weight decay.} Adam combines momentum (first moment of the gradient) with per-parameter step normalisation (second moment), so each parameter takes a step whose size is adapted to the scale of its own gradient. AdamW is a small fix on top. Vanilla Adam folds an L2 penalty into the gradient before the moment normalisation, which means the effective weight-decay strength ends up tied to the gradient magnitude and breaks the regularisation it was supposed to provide. AdamW decouples the decay and applies it directly to the parameters at update time, so the weight-decay coefficient now behaves as a clean shrinkage term the way the theory expects. The role of the weight-decay parameter is the same as L2 regularisation: it pulls the weights towards zero, which keeps them small and discourages overfitting.
+\Qpart{3} \textit{AdamW and weight decay.} Adam combines momentum (first moment of the gradient) with per-parameter step normalisation (second moment), so each parameter takes a step adapted to its own gradient scale. AdamW is a small fix on top. Vanilla Adam folds an L2 penalty into the gradient before the moment normalisation, which ties the effective decay to the gradient magnitude and breaks the regularisation. AdamW decouples the decay and applies it directly to the parameters at update time, so the decay coefficient behaves as a clean shrinkage term. Its role matches L2: pull weights toward zero, keep them small, discourage overfitting.
 
 \Qpart{4} \textit{Three-seed accuracy on \texttt{mlp\_adv.py}, 10 epochs.}
 
@@ -279,7 +278,7 @@ Seed & Untrained acc (\%) & Train acc (\%) & Test acc (\%) \\
 \caption{\texttt{mlp\_adv.py} architecture (Dense 512, Dropout 0.3, Dense 512, Dropout 0.3, Dense 10), AdamW with $\alpha = 10^{-3}$, weight decay $10^{-4}$, batch 128, 10 epochs. Roughly 670{,}000 trainable parameters.}
 \end{table}
 
-Test accuracy of 97.96-98.24\% across seeds sits about a full percentage point above the simple \texttt{mlp.py} baseline (97.08-97.25\%), and the train-test gap stays around 1.3 pp. The wider 512-512 hidden layers fit the function better than 128 units could, AdamW converges faster than vanilla SGD because the per-parameter step is rescaled by the running variance of the gradient, and dropout regularises the larger network so the extra capacity does not just turn into more overfitting. All three changes pull in the same direction.
+Test accuracy of 97.96-98.24\% across seeds sits about a percentage point above the plain \texttt{mlp.py} baseline (97.08-97.25\%), with a train-test gap of about 1.3 pp. Three changes pull the same way: wider 512-512 hidden layers fit better than 128 units, AdamW converges faster than vanilla SGD because each parameter's step is rescaled by its own gradient variance, and dropout keeps the extra capacity from turning into extra overfitting.
 
 % =========================================================================
 \Q{4.6 - LeNet-5 (\texttt{L4\_Q6.py})}
@@ -307,9 +306,9 @@ Out (Dense 84$\to$10)               & 850     & $84\cdot 10 + 10$ \\
 \caption{LeNet-5 parameter breakdown. Almost 80\% of the parameters live in F5 alone.}
 \end{table}
 
-The two convolutional stages together hold only $\approx$2.6k parameters even though they do most of the visual feature extraction; the dense layers carry the rest. Compared to the 670k of a 512-512 fully connected MLP this is more than ten times smaller.
+The two conv stages together hold only $\approx$2.6k parameters even though they do most of the feature extraction; the dense layers carry the rest. That is already an order of magnitude smaller than the 670k of a 512-512 MLP.
 
-\Qpart{2} \textit{Implementation notes.} The implementation follows the architecture above using \texttt{flax.linen}. C1 uses \texttt{SAME} padding so the first feature map stays at $28\times 28$ (the original LeNet padded $28\times 28$ to $32\times 32$; the modern equivalent is to use SAME on the conv directly). C3 uses VALID padding to get $10\times 10$, and both pooling layers are 2$\times$2 stride 2. All conv and dense layers use \texttt{tanh} activations as the assignment specifies. Training uses AdamW and batched updates of size 128.
+\Qpart{2} \textit{Implementation notes.} Built with \texttt{flax.linen}. C1 uses \texttt{SAME} padding so the first feature map stays $28\times 28$ (the original LeNet padded the input to $32\times 32$; using SAME on the conv is the modern equivalent). C3 uses VALID padding to get $10\times 10$. Both pools are $2\times 2$ stride 2. All conv and dense layers use \texttt{tanh}. Optimiser is AdamW, batch 128.
 
 \Qpart{3} \textit{Three-seed run at the default hyper-parameters, then a 3$\times$3 LR / weight-decay sweep at seed 10. All runs 10 epochs, batch 128.}
 
@@ -349,7 +348,7 @@ $10^{-4}$ & 96.75 & 96.75 & 96.75 \\
 \caption{LeNet-5 test accuracy as a function of learning rate and weight decay. The $\alpha = 10^{-3}$ row is uniformly the best regardless of weight decay.}
 \end{figure}
 
-Two findings. First, learning rate carries almost all the signal: $\alpha = 10^{-3}$ is the sweet spot at 98.27\%, $\alpha = 10^{-2}$ overshoots (96.5-97.3\%, the optimiser oscillates near the minimum), and $\alpha = 10^{-4}$ undertrains in 10 epochs (96.75\%). Second, weight decay has almost no effect at $\alpha = 10^{-3}$ and is invisible at $\alpha = 10^{-4}$. AdamW applies shrinkage proportional to $\alpha \cdot \lambda_{\text{wd}}$ each step, so at low learning rates the decay scale shrinks proportionally and stops mattering. The only place decay helps materially is at $\alpha = 10^{-2}$, where the stronger regularisation damps the oscillation and recovers about 0.8 pp.
+Learning rate carries almost all the signal. $\alpha = 10^{-3}$ is the sweet spot at 98.27\%, $\alpha = 10^{-2}$ overshoots (the optimiser oscillates near the minimum), $\alpha = 10^{-4}$ undertrains in 10 epochs. Weight decay barely moves the needle at $\alpha = 10^{-3}$ and is invisible at $\alpha = 10^{-4}$, because AdamW's per-step shrinkage is proportional to $\alpha \cdot \lambda_{\text{wd}}$, so a small rate shrinks the decay scale too. The one place decay pays off is at $\alpha = 10^{-2}$, where stronger regularisation damps the oscillation and recovers about 0.8 pp.
 
 \Qpart{4} \textit{LeNet-5 vs MLP comparison.}
 
@@ -369,7 +368,7 @@ LeNet-5                                & 61.7k & \textbf{98.48} & seed 42, same 
 \caption{Best test accuracy reached by each model on this lab. LeNet-5 wins despite having an order of magnitude fewer parameters than the deepest MLP.}
 \end{table}
 
-Even though LeNet-5 has roughly ten times fewer parameters than the wide MLP (61.7k vs 670k), it generalises a few tenths of a percentage point better. The reason is inductive bias. A convolutional layer encodes two priors: pixels close together are more related than pixels far apart, and the same feature can appear at any spatial position. Both priors are true for digit images, so the parameter budget goes into filters that match the structure of the input instead of being burned on irrelevant input-pixel-to-hidden-unit edges. The MLP has none of this. Every connection is learned independently, and most of those 670k parameters re-discover correlations the convolution captures for free. On MNIST that wastage costs only a few tenths of a percentage point. On harder vision data (CIFAR-10, ImageNet) where the structure is richer, the same inductive bias is the difference between a model that trains and one that does not.
+LeNet-5 has roughly ten times fewer parameters than the wide MLP (61.7k vs 670k) and still generalises a few tenths of a percentage point better. The reason is inductive bias. A conv layer encodes two priors: pixels close together are more related than pixels far apart, and the same feature can appear anywhere in the image. Both hold for digits, so the parameter budget goes into filters that match the input rather than into independent pixel-to-hidden-unit edges. The MLP has neither prior; most of its 670k parameters re-discover correlations a convolution captures for free. On MNIST the wastage costs only a few tenths of a percentage point. On richer data like CIFAR-10 or ImageNet the same inductive bias is the difference between a model that trains and one that does not.
 
 % =========================================================================
 

@@ -11,3 +11,4 @@
 {"exp": "4.6.3", "sweep": "lr_wd", "seed": 10, "lr": 0.0001, "wd": 0.0, "epochs": 10, "batch": 128, "n_params": 61706, "untrained": 9.880000114440918, "train_acc": 96.75666666666666, "test_acc": 96.75, "wall_s": 39.63207894100924}
 {"exp": "4.6.3", "sweep": "lr_wd", "seed": 10, "lr": 0.0001, "wd": 0.0001, "epochs": 10, "batch": 128, "n_params": 61706, "untrained": 9.880000114440918, "train_acc": 96.75666666666666, "test_acc": 96.75, "wall_s": 40.659918842007755}
 {"exp": "4.6.3", "sweep": "lr_wd", "seed": 10, "lr": 0.0001, "wd": 0.001, "epochs": 10, "batch": 128, "n_params": 61706, "untrained": 9.880000114440918, "train_acc": 96.75666666666666, "test_acc": 96.75, "wall_s": 40.48942673900456}
+{"exp": "4.6.1", "n_params": 61706, "by_layer": {"Conv_0": 156, "Conv_1": 2416, "Dense_0": 48120, "Dense_1": 10164, "Dense_2": 850}}
