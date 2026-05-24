@@ -1,0 +1,11 @@
+{"batch": 1, "exec_ns": 1030.0, "energy_J": 9.37127667767558e-05, "power_W": 90.98326871529689, "throughput": 970873.7864077669, "bounded_by": "Memory"}
+{"batch": 8, "exec_ns": 1030.0, "energy_J": 9.403889920215818e-05, "power_W": 91.29990213801764, "throughput": 7766990.291262135, "bounded_by": "Memory"}
+{"batch": 64, "exec_ns": 1030.0, "energy_J": 9.587973155375073e-05, "power_W": 93.08711801335022, "throughput": 62135922.33009708, "bounded_by": "Memory"}
+{"batch": 128, "exec_ns": 1030.0, "energy_J": 9.766571076470575e-05, "power_W": 94.82107841233568, "throughput": 124271844.66019416, "bounded_by": "Memory"}
+{"batch": 256, "exec_ns": 1030.0, "energy_J": 0.00010212361639436666, "power_W": 99.14914213045306, "throughput": 248543689.32038832, "bounded_by": "Memory"}
+{"batch": 1024, "exec_ns": 1885.0, "energy_J": 0.00019344671878644215, "power_W": 102.62425399811254, "throughput": 543236074.2705569, "bounded_by": "Compute"}
+{"batch": 4096, "exec_ns": 6405.0, "energy_J": 0.0006656063303155236, "power_W": 103.91980176667035, "throughput": 639500390.3200624, "bounded_by": "Compute"}
+{"batch": 16384, "exec_ns": 24475.0, "energy_J": 0.0025713709330240126, "power_W": 105.06112085899949, "throughput": 669417773.2379979, "bounded_by": "Compute"}
+{"batch": 65536, "exec_ns": 96755.0, "energy_J": 0.01019452212293031, "power_W": 105.36429252162998, "throughput": 677339672.368353, "bounded_by": "Compute"}
+{"batch": 262144, "exec_ns": 385885.0, "energy_J": 0.04068750801301325, "power_W": 105.43946515934344, "throughput": 679331925.3145367, "bounded_by": "Compute"}
+{"batch": 1048576, "exec_ns": 1542405.0, "energy_J": 0.16266029003661306, "power_W": 105.45887107252183, "throughput": 679831821.0846049, "bounded_by": "Compute"}
