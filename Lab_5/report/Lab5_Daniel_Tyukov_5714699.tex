@@ -77,10 +77,9 @@
 {\color{headingcolor}\sffamily\large\bfseries Notes}
 
 \begin{itemize}\setlength\itemsep{0.1em}
-    \item Model: 5-layer MLP, $16\to64\to64\to64\to10$, ReLU (10{,}058 parameters), supplied as a serialized JAX callable and a Keras file.
-    \item Hardware (AWS): Intel Xeon Platinum 8259CL (4 cores / 8 threads, 2.5 GHz), NVIDIA Tesla T4 (16 GB, 70 W cap). JAX 0.10.0.
-    \item TPUv2 modelled in NeuSim; FPGA is hls4ml 1.3.0 $\to$ Vitis/Vivado 2025.2 targeting an Alveo U200 (\texttt{xcu200}).
-    \item CPU/GPU latencies are the minimum over 500--1000 timed calls after a warm-up dispatch (\texttt{block\_until\_ready}). GPU power is the steady-state \texttt{nvidia-smi} draw under back-to-back inference. The CPU has no usable power telemetry on a virtualised AWS host, so 100 W is assumed per the brief.
+    \item Model: 5-layer MLP, $16\to64\to64\to64\to10$, ReLU (10{,}058 parameters).
+    \item Hardware (AWS): Xeon Platinum 8259CL (4C/8T, 2.5 GHz), Tesla T4 (16 GB, 70 W). TPUv2 in NeuSim; FPGA via hls4ml 1.3.0 $\to$ Vitis/Vivado 2025.2, Alveo U200 (\texttt{xcu200}).
+    \item CPU/GPU latency is the minimum over 500--1000 warm calls; GPU power is the steady-state \texttt{nvidia-smi} draw. CPU power is unmeasurable on a virtualised host, so 100 W is assumed per the brief.
 \end{itemize}
 
 \vspace{0.5em}
