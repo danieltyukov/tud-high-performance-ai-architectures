@@ -1,0 +1,8 @@
+{"backend": "jax", "host": "gpu", "n_cells": 1, "us_per_step": 60.8865, "total_1s_brain_s": 6.0886, "meas_seconds": 0.1}
+{"backend": "jax", "host": "gpu", "n_cells": 2, "us_per_step": 46.0065, "total_1s_brain_s": 4.6007, "meas_seconds": 0.1}
+{"backend": "jax", "host": "gpu", "n_cells": 10, "us_per_step": 45.7361, "total_1s_brain_s": 4.5736, "meas_seconds": 0.1}
+{"backend": "jax", "host": "gpu", "n_cells": 30, "us_per_step": 47.1953, "total_1s_brain_s": 4.7195, "meas_seconds": 0.1}
+{"backend": "jax", "host": "gpu", "n_cells": 100, "us_per_step": 46.1129, "total_1s_brain_s": 4.6113, "meas_seconds": 0.1}
+{"backend": "jax", "host": "gpu", "n_cells": 1000, "us_per_step": 46.9199, "total_1s_brain_s": 4.692, "meas_seconds": 0.1}
+{"backend": "jax", "host": "gpu", "n_cells": 10000, "us_per_step": 46.8524, "total_1s_brain_s": 4.6852, "meas_seconds": 0.1}
+{"backend": "jax", "host": "gpu", "n_cells": 100000, "us_per_step": 112.5187, "total_1s_brain_s": 11.2519, "meas_seconds": 0.1}
