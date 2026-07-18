@@ -1,83 +1,50 @@
-# CESE5040 — High-Performance Computing and AI Architectures
+# CESE5040 High-Performance Computing and AI Architectures
 
-TU Delft / Erasmus MC, 2026.
-Instructors: Christos Strydis, Rajendra Bishnoi, Amirreza Movahedin.
+Lab series for CESE5040 at TU Delft / Erasmus MC. The running theme is accelerating The Virtual Brain (TVB), a large-scale brain-network simulator, across six labs that climb the hardware stack from single-core Python to GPU, FPGA, and TPU, then pivot to training and profiling neural networks. Every lab has a submitted report, runnable scripts, captured results (`.jsonl`), and generated figures. Runs used a per-student AWS instance (see `AWS_WORKFLOW.md`).
 
-This directory holds course materials, lecture demo scripts, and lab assignments
-for the course. Reference files in this repo (read these before starting any new
-weekly task):
+`TVB_ALGORITHM.md` documents the simulator math and data layout that every lab builds on.
 
-| File | Purpose |
-|---|---|
-| `README.md` | This file. High-level orientation. |
-| `LAB_1.md` | Full Lab 1 reference: all 9 exercises, what each script does, what to submit. |
-| `LECTURE_SCRIPTS.md` | Walk-through of every `.py` in `Lecture_1&2 scripts/` (profiling, vectorization, JIT demos). |
-| `TVB_ALGORITHM.md` | The math + data layout behind TVB. The core that all labs build on. |
-| `AWS_WORKFLOW.md` | Discord bot + SSH connection to the course AWS instance. |
-| `SUBMISSION_GUIDELINES.md` | Report formatting, code-naming, LLM-disclosure rules, common pitfalls. |
-| `AWS_INSTANCE_SPECS.md` | Hardware/software details of the course VM — paste into the report's Hardware section. |
-| `report/` | **Reference-only** generic LaTeX template for lab reports. See `report/README.md`. |
-| `new-lab.sh` | Bootstrap script: `./new-lab.sh 2` → creates `Lab_2/report/lab2/` from the template. |
+## Labs
 
-## Directory layout
+### Lab 1: vectorization and JIT (CPU)
+Profiled the baseline sequential TVB loop, exploited connectome sparsity (CSR coupling), vectorized with NumPy, and JIT-compiled with Numba. Scaling measured across the 76, 192, and 998-region connectomes.
 
-```
-.
-├── Lecture_1&2 scripts/        # Profiling + vectorization + JIT demos
-│   ├── bessel_*.py             # 5 ways to time the same Bessel kernel
-│   ├── primes_cprofile.py      # cProfile + pstats demo
-│   ├── processtime_vs_time.py  # process_time vs time on multiprocessing
-│   ├── gol.py                  # Game of Life: elementwise vs vectorized
-│   ├── mb.py                   # Mandelbrot: sequential vs vectorized
-│   ├── ip_jit.py / ip_vec.py   # Seam carving: JIT vs NumPy vectorized
-│   └── lq.png                  # Test image for seam-carving demos
-├── Lab_1/
-│   ├── Lab_1 Assignment.pdf    # 9-exercise assignment (~57 pts)
-│   ├── Lab_1 Scripts/          # provided sequential implementations
-│   └── report/lab1/            # YOUR Lab 1 LaTeX report (bootstrapped from report/template/)
-│       ├── tvb_seq.py          # Baseline sequential TVB
-│       ├── tvb_seq_sparse.py   # CSR-sparse coupling
-│       ├── tvb_seq_mlp.py      # Local dynamics replaced by an MLP (dense + sparse modes)
-│       ├── tvb_seq_jit.py      # NumPy-array layout, JIT-ready
-│       └── lib/
-│           ├── data.py         # Downloads/caches TVB connectomes (76/192/998)
-│           ├── mlp_params.py   # Hard-coded weights for the MLP local dynamics
-│           └── plot.py         # plot_xs (timeseries) and plot_delay_hist
-├── Lab Guideline - How to Report Results.pdf
-├── Lab Guideline - How to Upload Python Code.pdf
-├── Lab Instructions – How to connect to AWS via Discord.pdf
-├── Lab_X_Answers_XXXXXX [template].docx   # Course-provided docx template (we mirror its structure in LaTeX)
-├── report/                     # GENERIC LaTeX template -- reference-only, never edited per-lab
-│   ├── README.md               # how the template works
-│   └── template/               # the seed (preamble, Lab.tex, Makefile, ...)
-├── new-lab.sh                  # ./new-lab.sh N -> creates Lab_N/report/labN/ from the template
-└── scripts/aws-ip.sh           # update SSH config when AWS rotates the instance IP
-```
+![Sparse-coupling efficiency versus connectome size](Lab_1/report/lab1/figures/q7_sparse_efficiency.png)
 
-## Course arc (what each lab is likely doing)
+### Lab 2: multi-core parallelism
+Parallelized TVB with multiprocessing and shared-memory arrays, tuned the work-chunk size, and used py-spy sampling profiles (flame graph, top view) to find the remaining serial bottlenecks.
 
-The first three labs progressively accelerate TVB:
+![py-spy top view of the parallel TVB run](Lab_2/figures/pyspy_top.png)
 
-1. **Lab 1 — Vectorization + JIT.** Profile, analyze sparsity, vectorize with
-   NumPy, JIT-compile with Numba. CPU-only. (This lab.)
-2. **Lab 2 — likely multi-core / multi-process parallelism.**
-3. **Lab 3 — likely GPU (CUDA/CuPy) acceleration.**
+### Lab 3: GPU acceleration
+Ported the vectorized simulator to the GPU with CuPy, profiled kernels with nvprof, and analyzed the compute/transfer breakdown and dataset-size scaling of throughput.
 
-So the optimizations you build in Lab 1 are the foundation for Labs 2 and 3 —
-keep your Lab 1 code clean and reusable.
+### Lab 4: neural-network training
+Trained an MLP / LeNet-5 classifier and swept the training hyperparameters, batch size, learning rate, and weight decay, over multiple seeds.
 
-## Working environment
+![Test accuracy over the learning-rate by weight-decay grid](Lab_4/figures/q463_lr_wd_heatmap.png)
 
-- Code runs on a **per-student AWS instance** managed via a Discord bot.
-  Budget: **16 hours/week, resets Monday**. Always `$stop` when not actively
-  working. See `AWS_WORKFLOW.md`.
-- Local development is fine for writing/testing on small TVB datasets (76
-  centers); use AWS for the big runs (TVB998) and final timing measurements.
-- Python 3.12 preinstalled on the AWS image.
+### Lab 5: FPGA HLS and TPU
+Synthesized an MLP inference kernel with Vivado HLS (reuse-factor and clock sweeps, power reports), and characterized a TPU inference roofline, tracing the transition from memory-bound to compute-bound as batch size grows.
 
-## Submission cheatsheet (Lab 1)
+![TPU inference latency versus batch size: memory-bound then compute-bound](Lab_5/figures/tpu_roofline.png)
 
-- Report PDF: `Lab1_Firstname_Lastname_Studentnumber.pdf`
-- Code (separate, unzipped): `L1_Q6.py`, `L1_Q7.py`, `L1_Q8.py`, `L1_Q9.py`
-- Disclose any LLM use. Full-LLM submission is prohibited.
-- See `SUBMISSION_GUIDELINES.md` for the full list of pitfalls.
+### Lab 6: I/O optimization
+Modeled and optimized the data-loading path (`io_model.py`, `io_fast.py`), profiling I/O against compute and measuring the scaling of the optimized pipeline.
+
+## Lecture demos
+
+`Lecture_*/` holds the profiling and acceleration demos worked through in lectures: five ways to time a Bessel kernel, cProfile/pstats, process pools (map, submit, chunksize, deadlock, IO vs compute), Game of Life and Mandelbrot vectorization, seam carving with JIT versus NumPy, and CuPy/Numba CUDA precision demos.
+
+## Repository layout
+
+| Path | Contents |
+| --- | --- |
+| `Lab_1/` to `Lab_6/` | Per-lab scripts, results, figures, report, and submission bundle |
+| `Lecture_*/` | Lecture demo scripts |
+| `report/template/` | Generic LaTeX report template; `new-lab.sh` seeds a new lab from it |
+| `TVB_ALGORITHM.md` | TVB math and data-layout reference |
+| `AWS_WORKFLOW.md`, `AWS_INSTANCE_SPECS.md` | Course AWS instance setup and specs |
+| `SUBMISSION_GUIDELINES.md` | Report and code submission rules |
+
+Tools: NumPy, Numba, multiprocessing, CuPy, Vivado HLS, TPU, py-spy / nvprof profiling, Python 3.12.
